@@ -1,18 +1,20 @@
 import React, { ChangeEvent, FC } from 'react';import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
+import Loader from '../Loader';
 import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
+import { Saint } from '../../models/saint/Saint';
+import { Region } from '../../models/saint/Region';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
-import { Saint } from '../../models/saint/Saint';
-import { Region } from '../../models/saint/Region';
-import Loader from '../Loader';
+import { S3Service } from '../../services/aws/S3Service';
 
 const Saint: FC<{}> = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const s3UploadService = new S3Service();
 
     const create: boolean = !id;
 
@@ -67,6 +69,25 @@ const Saint: FC<{}> = () => {
         setSaint(prevSaint => ({
             ...prevSaint,
             region: event!.value as Region
+        }));
+    };
+
+    const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        event.persist();
+
+        const images: FileList | null = event.target.files;
+
+        let imageUrl: string | undefined = undefined;
+
+        if (images) {
+            const image: File = images[0];
+
+            imageUrl = await s3UploadService.uploadFile(image);
+        }
+        
+        setSaint(prevSaint => ({
+            ...prevSaint,
+            imageURL: imageUrl
         }));
     };
 
@@ -135,6 +156,15 @@ const Saint: FC<{}> = () => {
                         name="notes"
                         value={saint.notes || ''}
                         onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Avatar</label>
+                    <input
+                        type="file"
+                        name="avatar"
+                        accept=".jpeg,.jpg,.png"
+                        onChange={handleAvatarChange}
                     />
                 </div>
                 <div className="button-container">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { APIResponse } from '../../models/api/APIResponse';
 import { Saint } from '../../models/saint/Saint';
 import { Service } from '../../models/Service';
 
@@ -16,14 +17,16 @@ const useSaintByIdService = (initialState: Saint, assignCallback: (saint: Saint)
             headers.append('Access-Control-Allow-Headers', '*');
 
             const getData = async () => {
-                const response: Response = await fetch(
+                const responseBuffer: Response = await fetch(
                     `/saints/${id}`,
                     { method: 'GET', headers: headers }
                 );
 
-                const data = await response.json();
+                const apiResponse = await responseBuffer.json() as APIResponse<Saint>;
 
-                assignCallback({  ...initialState, ...data.data});
+                const data: Saint = apiResponse.data;
+
+                assignCallback({  ...initialState, ...data});
 
                 setResult({ status: 'loaded', payload: data });
             };
