@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC } from 'react';import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
+import { Dropzone, FileItem, FileValidated } from "@dropzone-ui/react";
 import Loader from '../Loader';
 import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
@@ -22,6 +23,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
+    const [files, setFiles] = React.useState<Array<FileValidated>>([]);
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -72,17 +74,15 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
-        event.persist();
-
-        const images: FileList | null = event.target.files;
+    const handleAvatarChange = async (files: Array<FileValidated>) => {
+        setFiles(files);
 
         let imageUrl: string | undefined = undefined;
 
-        if (images) {
-            const image: File = images[0];
+        if (files.length) {
+            const imageFile: FileValidated = files[0];
 
-            imageUrl = await s3UploadService.uploadFile(image);
+            imageUrl = await s3UploadService.uploadFile(imageFile.file);
         }
         
         setSaint(prevSaint => ({
@@ -160,12 +160,11 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                    <input
-                        type="file"
-                        name="avatar"
-                        accept=".jpeg,.jpg,.png"
-                        onChange={handleAvatarChange}
-                    />
+                    <Dropzone onChange={handleAvatarChange} value={files} accept=".jpeg,.jpg,.png">
+                        {files.map((file) => (
+                            <FileItem {...file} preview />
+                        ))}
+                    </Dropzone>
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>

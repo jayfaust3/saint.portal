@@ -8,11 +8,14 @@
     "production": "webpack -p"
   },
   "dependencies": {
+    "@dropzone-ui/react": "^6.7.1",
+    "aws-sdk": "2.1096.0",
+    "axios": "^0.26.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.2",
-    "react-s3": "^1.3.1",
-    "react-select": "5.2.2"
+    "react-select": "5.2.2",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

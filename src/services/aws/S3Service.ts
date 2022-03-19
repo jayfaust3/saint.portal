@@ -1,9 +1,9 @@
+import { S3 } from 'aws-sdk';
 import { S3Config } from "../../models/config/aws/S3Config";
-
-const S3FileUpload = require('react-s3');
 
 export class S3Service {
     readonly #config: S3Config;
+    readonly #client: S3;
 
     constructor(config?: S3Config) {
         this.#config = config ?? {
@@ -13,11 +13,22 @@ export class S3Service {
             accessKeyId: 'fake',
             secretAccessKey: 'fake'
         };
+
+        this.#client = new S3({
+            s3ForcePathStyle: true,
+            accessKeyId: this.#config.accessKeyId,
+            secretAccessKey: this.#config.secretAccessKey,
+            endpoint: 'http://localhost:5000'
+        });
     }
 
     public async uploadFile(file: File): Promise<string> {
-        const uploadResponse = await S3FileUpload.uploadFile(file, this.#config);
+        const uploadResponse = await this.#client.upload({
+            Bucket: this.#config.bucketName,
+            Key: `saint-${new Date().toISOString()}`,
+            Body: await file.arrayBuffer()
+        }).promise();
 
-        return uploadResponse.location;
+        return uploadResponse.Location;
     }
 }

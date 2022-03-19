@@ -43,6 +43,11 @@ module.exports = {
           }
         }
       },
+      resolve: {
+        fallback: {
+          util: require.resolve("util/")
+        }
+      },
       plugins: [
         new HtmlWebpackPlugin({
           template: path.resolve(__dirname, "public", "index.html"),
