@@ -1,4 +1,5 @@
 import { S3 } from 'aws-sdk';
+import ProxyAgent from 'proxy-agent';
 import { S3Config } from "../../models/config/aws/S3Config";
 
 export class S3Service {
@@ -18,7 +19,10 @@ export class S3Service {
             s3ForcePathStyle: true,
             accessKeyId: this.#config.accessKeyId,
             secretAccessKey: this.#config.secretAccessKey,
-            endpoint: 'http://localhost:5000'
+            endpoint: 'http://localhost:5000',
+            httpOptions: {
+                agent: ProxyAgent('http://localhost:3000')
+            }
         });
     }
 

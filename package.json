@@ -12,6 +12,7 @@
     "aws-sdk": "2.1096.0",
     "axios": "^0.26.1",
     "core.js": "^0.4.2",
+    "proxy-agent": "^5.0.0",
     "react": "^17.0.2",
     "react-app-polyfill": "^3.0.0",
     "react-dom": "^17.0.2",
