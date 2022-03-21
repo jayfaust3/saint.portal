@@ -26,7 +26,7 @@ export class S3Service {
         const uploadResponse = await this.#client.upload({
             Bucket: this.#config.bucketName,
             Key: `saint-${new Date().toISOString()}`,
-            Body: await file.arrayBuffer()
+            Body: file
         }).promise();
 
         return uploadResponse.Location;
