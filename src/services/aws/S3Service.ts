@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import S3 from 'aws-sdk/clients/s3';
 import { S3Config } from "../../models/config/aws/S3Config";
 
 export class S3Service {
@@ -18,9 +18,9 @@ export class S3Service {
             s3ForcePathStyle: true,
             accessKeyId: this.#config.accessKeyId,
             secretAccessKey: this.#config.secretAccessKey,
-            endpoint: 'http://localhost:5000',
+            endpoint: '/saint-bucket',
             httpOptions: {
-                //agent: ProxyAgent('http://localhost:3000')
+                // proxy: 'http://localhost:3000'
             }
         });
     }
