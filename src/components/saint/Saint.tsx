@@ -1,7 +1,6 @@
 import React, { ChangeEvent, FC } from 'react';import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
-import { Dropzone, FileItem, FileValidated } from "@dropzone-ui/react";
 import Loader from '../Loader';
 import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
@@ -23,7 +22,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    const [files, setFiles] = React.useState<Array<FileValidated>>([]);
+    const [file, setFile] = React.useState<File | undefined>();
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -74,25 +73,27 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = async (files: Array<FileValidated>) => {
-        setFiles(files);
+    const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files?.length) {
+            const file: File = event.target.files[0];
 
-        let imageUrl: string | undefined = undefined;
-
-        if (files.length) {
-            const imageFile: FileValidated = files[0];
-
-            imageUrl = await s3UploadService.uploadFile(imageFile.file);
+            setFile(file);
+        } else {
+            setFile(undefined);
         }
-        
-        setSaint(prevSaint => ({
-            ...prevSaint,
-            imageURL: imageUrl
-        }));
     };
 
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (file) {
+            const s3Url: string = await s3UploadService.uploadFile(file);
+
+            setSaint(prevSaint => ({
+                ...prevSaint,
+                imageURL: s3Url
+            }));
+        }
 
         await saveSaintAction(saint);
 
@@ -160,11 +161,12 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                    <Dropzone onChange={handleAvatarChange} value={files} accept=".jpeg,.jpg,.png">
-                        {files.map((file) => (
-                            <FileItem {...file} preview />
-                        ))}
-                    </Dropzone>
+                    <input
+                        type="file"
+                        name="avatar"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                    />
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>

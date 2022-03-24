@@ -18,14 +18,15 @@ export class S3Service {
             s3ForcePathStyle: true,
             accessKeyId: this.#config.accessKeyId,
             secretAccessKey: this.#config.secretAccessKey,
-            endpoint: '/saint-bucket',
-            httpOptions: {
-                // proxy: 'http://localhost:3000'
-            }
+            endpoint: '/saint-bucket'
+        });
+
+        this.#client.config.update({
+            region: this.#config.region
         });
     }
 
-    public async uploadFile(file: File): Promise<string> {
+    public async uploadFile(file: Buffer | Uint8Array | Blob): Promise<string> {
         const uploadResponse = await this.#client.upload({
             Bucket: this.#config.bucketName,
             Key: `saint-${new Date().toISOString()}`,
