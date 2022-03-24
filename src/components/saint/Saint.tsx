@@ -22,7 +22,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    const [file, setFile] = React.useState<File | undefined>();
+    const [file, setFile] = React.useState<Uint8Array | undefined>();
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -73,11 +73,13 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files?.length) {
-            const file: File = event.target.files[0];
+            const inputFile: File = event.target.files[0];
 
-            setFile(file);
+            const buffer: ArrayBuffer = await inputFile.arrayBuffer();
+
+            setFile(new Uint8Array(buffer));
         } else {
             setFile(undefined);
         }
