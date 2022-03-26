@@ -41,8 +41,8 @@ module.exports = {
             target: "http://localhost:3009",
             changeOrigin: true
           },
-          "/saint-bucket": {
-            target: "http://localhost:5000",
+          "/files": {
+            target: "http://localhost:3001",
             changeOrigin: true
           }
         }

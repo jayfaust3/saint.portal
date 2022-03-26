@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { APIResponse } from '../../models/api/APIResponse';
-import { Saint } from '../../models/saint/Saint';
 import { Service } from '../../models/Service';
+import { APIResponse } from '../../models/api/APIResponse';
+import { File } from '../../models/file/File';
 
-const usePutSaintService = () => {
-    const [putSaintService, setService] = useState<Service<APIResponse<Saint>>>({
+const usePostFileService = () => {
+    const [postFileService, setService] = useState<Service<APIResponse<File>>>({
         status: 'init'
     });
 
-    const updateSaint = async (saint: Saint) => {
+    const publishFile = async (file: File) => {
         setService({ status: 'loading' });
 
         const headers = new Headers();
@@ -19,11 +19,11 @@ const usePutSaintService = () => {
 
         try {
             const response: Response = await fetch(
-                `/saints/${saint.id}`, 
+                '/files', 
                 { 
-                    method: 'PUT', 
+                    method: 'POST', 
                     headers: headers,
-                    body: JSON.stringify(saint)
+                    body: JSON.stringify(file)
                 }
             );
 
@@ -36,9 +36,9 @@ const usePutSaintService = () => {
     };
 
     return {
-        putSaintService,
-        updateSaint
+        postFileService,
+        publishFile
     };
 };
 
-export default usePutSaintService;
+export default usePostFileService;

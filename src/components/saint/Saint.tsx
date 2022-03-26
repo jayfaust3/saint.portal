@@ -6,15 +6,15 @@ import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
+import { File } from '../../models/file/File';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
-import { S3Service } from '../../services/aws/S3Service';
+import usePostFileService from '../../services/file/usePostFileService';
 
 const Saint: FC<{}> = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const s3UploadService = new S3Service();
 
     const create: boolean = !id;
 
@@ -22,7 +22,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    const [file, setFile] = React.useState<Uint8Array | undefined>();
+    const { postFileService, publishFile } = usePostFileService();
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -34,16 +34,16 @@ const Saint: FC<{}> = () => {
         .sort((a, b) => a.label.localeCompare(b.label));
 
     if (create) {
-        const { service, publishSaint } = usePostSaintService();
+        const { postSaintService, publishSaint } = usePostSaintService();
 
-        saveSaintService = service;
+        saveSaintService = postSaintService;
 
         saveSaintAction = publishSaint;
 
     } else {
-        const { service, updateSaint } = usePutSaintService();
+        const { putSaintService, updateSaint } = usePutSaintService();
 
-        saveSaintService = service;
+        saveSaintService = putSaintService;
 
         saveSaintAction = updateSaint;
     }
@@ -75,27 +75,36 @@ const Saint: FC<{}> = () => {
 
     const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files?.length) {
-            const inputFile: File = event.target.files[0];
+            const inputFile = event.target.files[0];
 
             const buffer: ArrayBuffer = await inputFile.arrayBuffer();
 
-            setFile(new Uint8Array(buffer));
+            await publishFile({
+                name: `saint-${new Date().toISOString()}`,
+                content: new Uint8Array(buffer),
+                bucketName: 'saint'
+            });
+
+            while(['loading', 'loaded'].includes(postFileService.status)) {
+                if (postFileService.status === 'loaded') {
+                    setSaint(prevSaint => ({
+                        ...prevSaint,
+                        imageURL: postFileService.payload.data.url
+                    }));
+
+                    break;
+                }
+            }
         } else {
-            setFile(undefined);
+            setSaint(prevSaint => ({
+                ...prevSaint,
+                imageURL: undefined
+            }));
         }
-    };
+    }
 
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        if (file) {
-            const s3Url: string = await s3UploadService.uploadFile(file);
-
-            setSaint(prevSaint => ({
-                ...prevSaint,
-                imageURL: s3Url
-            }));
-        }
 
         await saveSaintAction(saint);
 
@@ -169,6 +178,11 @@ const Saint: FC<{}> = () => {
                         accept="image/*"
                         onChange={handleAvatarChange}
                     />
+                    {postFileService.status === 'error' && (
+                        <div>
+                            Unable to upload avatar.
+                        </div>
+                    )}
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>

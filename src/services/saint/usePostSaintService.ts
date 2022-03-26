@@ -4,7 +4,7 @@ import { Saint } from '../../models/saint/Saint';
 import { Service } from '../../models/Service';
 
 const usePostSaintService = () => {
-    const [service, setService] = useState<Service<APIResponse<Saint>>>({
+    const [postSaintService, setService] = useState<Service<APIResponse<Saint>>>({
         status: 'init'
     });
 
@@ -36,7 +36,7 @@ const usePostSaintService = () => {
     };
 
     return {
-        service,
+        postSaintService,
         publishSaint
     };
 };
