@@ -6,7 +6,6 @@ import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
-import { File } from '../../models/file/File';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
@@ -21,6 +20,7 @@ const Saint: FC<{}> = () => {
     let saveSaintService: Service<APIResponse<Saint>>;
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
+    const [file, setFile] = React.useState<File | undefined>(undefined);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
     const { postFileService, publishFile } = usePostFileService();
 
@@ -73,15 +73,21 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files?.length) {
-            const inputFile = event.target.files[0];
+            setFile(event.target.files[0]);
+        } else {
+            setFile(undefined);
+        }
+    }
 
-            const buffer: ArrayBuffer = await inputFile.arrayBuffer();
+    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
+        if (file) {
             await publishFile({
                 name: `saint-${new Date().toISOString()}`,
-                content: new Uint8Array(buffer),
+                content: file.stream().read(),
                 bucketName: 'saint'
             });
 
@@ -95,16 +101,7 @@ const Saint: FC<{}> = () => {
                     break;
                 }
             }
-        } else {
-            setSaint(prevSaint => ({
-                ...prevSaint,
-                imageURL: undefined
-            }));
         }
-    }
-
-    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
 
         await saveSaintAction(saint);
 
