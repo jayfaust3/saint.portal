@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Service } from '../../models/Service';
 import { APIResponse } from '../../models/api/APIResponse';
 import { File } from '../../models/file/File';
+import { Saint } from '../../models/saint/Saint';
 
-const usePostFileService = () => {
+const usePostFileService = (state: Saint, assignCallback: (saint: Saint) => void) => {
     const [postFileService, setService] = useState<Service<APIResponse<File>>>({
         status: 'init'
     });
@@ -18,7 +19,7 @@ const usePostFileService = () => {
         headers.append('Accept', 'application/json');
 
         try {
-            const response: Response = await fetch(
+            const responseBuffer: Response  = await fetch(
                 '/files', 
                 { 
                     method: 'POST', 
@@ -27,9 +28,11 @@ const usePostFileService = () => {
                 }
             );
 
-            const data = await response.json();
+            const apiResponse = await responseBuffer.json() as APIResponse<File>;
 
-            setService({ status: 'loaded', payload: data });
+            assignCallback({ ...state, imageURL: apiResponse.data.url });
+
+            setService({ status: 'loaded', payload: apiResponse });
         } catch (error) {
             setService({ status: 'error', error: error as Error });
         }
