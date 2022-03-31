@@ -4,7 +4,7 @@ import { APIResponse } from '../../models/api/APIResponse';
 import { File } from '../../models/file/File';
 import { Saint } from '../../models/saint/Saint';
 
-const usePostFileService = (state: Saint, assignCallback: (saint: Saint) => void) => {
+const usePostFileService = () => {
     const [postFileService, setService] = useState<Service<APIResponse<File>>>({
         status: 'init'
     });
@@ -29,10 +29,6 @@ const usePostFileService = (state: Saint, assignCallback: (saint: Saint) => void
             );
 
             const apiResponse = await responseBuffer.json() as APIResponse<File>;
-
-            const imageURL = apiResponse.data.url;
-
-            assignCallback({ ...state, imageURL });
 
             setService({ status: 'loaded', payload: apiResponse });
         } catch (error) {

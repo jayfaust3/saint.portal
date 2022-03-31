@@ -22,7 +22,7 @@ const Saint: FC<{}> = () => {
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const [file, setFile] = React.useState<File | undefined>(undefined);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    const { postFileService, publishFile } = usePostFileService(saint, setSaint);
+    const { postFileService, publishFile } = usePostFileService();
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -91,9 +91,19 @@ const Saint: FC<{}> = () => {
                 bucketName: 'saint',
                 path: 'images'
             });
-        }
 
-        await saveSaintAction(saint);
+            do {
+                if (postFileService.status === 'loaded') {
+                    setSaint(prevSaint => ({
+                        ...prevSaint,
+                        imageURL: postFileService.payload.data.url
+                    }));
+                }
+
+            } while (postFileService.status !== 'loading')
+        } else {
+            await saveSaintAction(saint);
+        }
 
         navigate('/');
     };
