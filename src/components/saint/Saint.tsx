@@ -102,6 +102,8 @@ const Saint: FC<{}> = () => {
 
                         saveSaintAction(newSaintState);
 
+                        navigate('/');
+
                         return newSaintState;
                     });
 
@@ -115,9 +117,9 @@ const Saint: FC<{}> = () => {
             } while (postFileService.status === 'loading')
         } else {
             await saveSaintAction(saint);
-        }
 
-        navigate('/');
+            navigate('/');
+        }
     };
 
     return (
