@@ -86,7 +86,7 @@ const Saint: FC<{}> = () => {
 
         if (file) {
             await publishFile({
-                name: `saint-${new Date().toISOString()}`,
+                name: `${saint.name}-${new Date().toISOString()}`,
                 content: Buffer.from(await file.arrayBuffer()).toString('base64'),
                 bucketName: 'saint',
                 path: 'images'
