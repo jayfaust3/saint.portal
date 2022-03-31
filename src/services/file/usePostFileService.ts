@@ -30,7 +30,9 @@ const usePostFileService = (state: Saint, assignCallback: (saint: Saint) => void
 
             const apiResponse = await responseBuffer.json() as APIResponse<File>;
 
-            assignCallback({ ...state, imageURL: apiResponse.data.url });
+            const imageURL = apiResponse.data.url;
+
+            assignCallback({ ...state, imageURL });
 
             setService({ status: 'loaded', payload: apiResponse });
         } catch (error) {
