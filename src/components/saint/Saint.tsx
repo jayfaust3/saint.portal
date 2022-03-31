@@ -94,13 +94,25 @@ const Saint: FC<{}> = () => {
 
             do {
                 if (postFileService.status === 'loaded') {
-                    setSaint(prevSaint => ({
-                        ...prevSaint,
-                        imageURL: postFileService.payload.data.url
-                    }));
+                    setSaint(prevSaint => {
+                        const newSaintState: Saint = {
+                            ...prevSaint,
+                            imageURL: postFileService.payload.data.url
+                        };
+
+                        saveSaintAction(newSaintState);
+
+                        return newSaintState;
+                    });
+
+                    break;
                 }
 
-            } while (postFileService.status !== 'loading')
+                if (postFileService.status === 'error') {
+                    break;
+                }
+
+            } while (postFileService.status === 'loading')
         } else {
             await saveSaintAction(saint);
         }
