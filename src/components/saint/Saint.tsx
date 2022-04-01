@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FC } from 'react';import { useParams } from 'react-router-dom';
+import React, { ChangeEvent, FC, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
 import Loader from '../Loader';
@@ -81,6 +82,18 @@ const Saint: FC<{}> = () => {
         }
     }
 
+    useEffect(() => {
+        if (file && saint.imageURL) {
+            saveSaintAndReturnToIndex();
+        }
+    }, [saint]);
+
+    const saveSaintAndReturnToIndex = async () => {
+        await saveSaintAction(saint);
+
+        navigate('/');
+    };
+
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -94,18 +107,10 @@ const Saint: FC<{}> = () => {
 
             do {
                 if (postFileService.status === 'loaded') {
-                    setSaint(prevSaint => {
-                        const newSaintState: Saint = {
-                            ...prevSaint,
-                            imageURL: postFileService.payload.data.url
-                        };
-
-                        saveSaintAction(newSaintState);
-
-                        navigate('/');
-
-                        return newSaintState;
-                    });
+                    setSaint(prevSaint => ({
+                        ...prevSaint,
+                        imageURL: postFileService.payload.data.url
+                    }));
 
                     break;
                 }
@@ -116,9 +121,7 @@ const Saint: FC<{}> = () => {
 
             } while (postFileService.status === 'loading')
         } else {
-            await saveSaintAction(saint);
-
-            navigate('/');
+            await saveSaintAndReturnToIndex();
         }
     };
 
