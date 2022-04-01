@@ -7,32 +7,24 @@ import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
+import { DropdownModel } from '../../models/component/DropdownModel';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
 import { FileService } from '../../services/file/FileService';
+import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
 const Saint: FC<{}> = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
-
+    const { id } = useParams();
     const create: boolean = !id;
-
     let saveSaintService: Service<APIResponse<Saint>>;
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const [file, setFile] = React.useState<File | undefined>(undefined);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
     const fileService = new FileService();
-
-    const regions: Array<{ label: string; value: string}> = 
-        Object.entries(Region).map((entry) => {
-            return { 
-                label: entry[1],
-                value: entry[0]
-            };
-        })
-        .sort((a, b) => a.label.localeCompare(b.label));
+    const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
 
     if (create) {
         const { postSaintService, publishSaint } = usePostSaintService();
@@ -67,7 +59,7 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleRegionChange = (event: SingleValue<{label: string; value: string}>, actionMeta: ActionMeta<{label: string; value: string}>) => {        
+    const handleRegionChange = (event: SingleValue<DropdownModel>, actionMeta: ActionMeta<DropdownModel>) => {        
         setSaint(prevSaint => ({
             ...prevSaint,
             region: event!.value as Region
@@ -82,11 +74,7 @@ const Saint: FC<{}> = () => {
         }
     }
 
-    const saveSaintAndReturnToIndex = async () => {
-        await saveSaintAction(saint);
-
-        navigate('/');
-    };
+    const navigateToIndex = () => navigate('/');
 
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -103,9 +91,11 @@ const Saint: FC<{}> = () => {
                 ...prevSaint,
                 imageURL: fileResponse.data.url
             }));
-        } else {
-            await saveSaintAndReturnToIndex();
         }
+        
+        await saveSaintAction(saint);
+
+        navigateToIndex();
     };
 
     return (
@@ -177,7 +167,7 @@ const Saint: FC<{}> = () => {
                     />
                 </div>
                 <div className="button-container">
-                    <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
+                    <button type="button" className="cancel-button" onClick={navigateToIndex}>Cancel</button>
                     <button type="submit" className="action-button">Save</button>
                 </div>
             </form>)}
