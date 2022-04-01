@@ -10,7 +10,7 @@ import { Region } from '../../models/saint/Region';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
-import usePostFileService from '../../services/file/usePostFileService';
+import { FileService } from '../../services/file/FileService';
 
 const Saint: FC<{}> = () => {
     const { id } = useParams();
@@ -23,7 +23,7 @@ const Saint: FC<{}> = () => {
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const [file, setFile] = React.useState<File | undefined>(undefined);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    const { postFileService, publishFile } = usePostFileService();
+    const fileService = new FileService();
 
     const regions: Array<{ label: string; value: string}> = 
         Object.entries(Region).map((entry) => {
@@ -98,28 +98,17 @@ const Saint: FC<{}> = () => {
         event.preventDefault();
 
         if (file) {
-            await publishFile({
+            const fileResponse = await fileService.postFile({
                 name: `${saint.name}-${new Date().toISOString()}`,
                 content: Buffer.from(await file.arrayBuffer()).toString('base64'),
                 bucketName: 'saint',
                 path: 'images'
             });
 
-            do {
-                if (postFileService.status === 'loaded') {
-                    setSaint(prevSaint => ({
-                        ...prevSaint,
-                        imageURL: postFileService.payload.data.url
-                    }));
-
-                    break;
-                }
-
-                if (postFileService.status === 'error') {
-                    break;
-                }
-
-            } while (postFileService.status === 'loading')
+            setSaint(prevSaint => ({
+                ...prevSaint,
+                imageURL: fileResponse.data.url
+            }));
         } else {
             await saveSaintAndReturnToIndex();
         }
@@ -192,11 +181,6 @@ const Saint: FC<{}> = () => {
                         accept="image/*"
                         onChange={handleAvatarChange}
                     />
-                    {postFileService.status === 'error' && (
-                        <div>
-                            Unable to upload avatar.
-                        </div>
-                    )}
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
