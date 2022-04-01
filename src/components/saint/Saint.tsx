@@ -159,7 +159,7 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                    <Dropzone onChange={handleAvatarChange} value={files}>
+                    <Dropzone onChange={handleAvatarChange} value={files} maxFiles={1} accept={'image/*'} behaviour={'replace'}>
                         {files.map((file) => (
                             <FileItem {...file} preview />
                         ))}
