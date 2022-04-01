@@ -2,11 +2,13 @@ import React, { ChangeEvent, FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
+import { Dropzone, FileItem, FileValidated } from "@dropzone-ui/react";
 import Loader from '../Loader';
 import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
+import { File } from '../../models/file/File';
 import { DropdownModel } from '../../models/component/DropdownModel';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
@@ -21,11 +23,11 @@ const Saint: FC<{}> = () => {
     let saveSaintService: Service<APIResponse<Saint>>;
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
-    const [file, setFile] = React.useState<File | undefined>(undefined);
+    const [files, setFiles] = React.useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
-
+    
     if (create) {
         const { postSaintService, publishSaint } = usePostSaintService();
 
@@ -66,12 +68,8 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files?.length) {
-            setFile(event.target.files[0]);
-        } else {
-            setFile(undefined);
-        }
+    const handleAvatarChange = (incommingFiles: Array<FileValidated>) => {
+        setFiles(incommingFiles);
     }
 
     const navigateToIndex = () => navigate('/');
@@ -79,10 +77,12 @@ const Saint: FC<{}> = () => {
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (file) {
-            const fileResponse = await fileService.postFile({
+        if (files?.length) {
+            const file: FileValidated = files[0];
+
+            const fileResponse: APIResponse<File> = await fileService.postFile({
                 name: `${saint.name}-${new Date().toISOString()}`,
-                content: Buffer.from(await file.arrayBuffer()).toString('base64'),
+                content: Buffer.from(await file.file.arrayBuffer()).toString('base64'),
                 bucketName: 'saint',
                 path: 'images'
             });
@@ -159,12 +159,11 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                    <input
-                        type="file"
-                        name="avatar"
-                        accept="image/*"
-                        onChange={handleAvatarChange}
-                    />
+                    <Dropzone onChange={handleAvatarChange} value={files}>
+                        {files.map((file) => (
+                            <FileItem {...file} preview />
+                        ))}
+                    </Dropzone>
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={navigateToIndex}>Cancel</button>
