@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
@@ -81,12 +81,6 @@ const Saint: FC<{}> = () => {
             setFile(undefined);
         }
     }
-
-    useEffect(() => {
-        if (file && saint.imageURL) {
-            saveSaintAndReturnToIndex();
-        }
-    }, [saint]);
 
     const saveSaintAndReturnToIndex = async () => {
         await saveSaintAction(saint);
