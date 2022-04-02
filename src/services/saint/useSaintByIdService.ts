@@ -10,6 +10,7 @@ const useSaintByIdService = (initialState: Saint, assignCallback: (saint: Saint)
 
     useEffect(() => {
         setResult({ status: 'loading' });
+
         if (id) {
             const headers = new Headers();
             headers.append('Content-Type', 'application/json; charset=utf-8');
