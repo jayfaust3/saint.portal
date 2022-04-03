@@ -13,6 +13,7 @@ import { DropdownModel } from '../../models/component/DropdownModel';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
+import useGetFileByUrlService from '../../services/file/useGetFileByUrlService';
 import { FileService } from '../../services/file/FileService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
@@ -25,6 +26,7 @@ const Saint: FC<{}> = () => {
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
+    let getFileService: Service<{}> | undefined = undefined;
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     
@@ -41,6 +43,10 @@ const Saint: FC<{}> = () => {
         saveSaintService = putSaintService;
 
         saveSaintAction = updateSaint;
+
+        if (saint.imageURL) {
+            getFileService = useGetFileByUrlService(saint.imageURL, setFiles);
+        }
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -159,7 +165,8 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                    <Dropzone 
+                   {getFileService ? getFileService.status === 'loaded' : true &&
+                   (<Dropzone 
                         onChange={handleAvatarChange}
                         value={files}
                         maxFiles={1}
@@ -169,7 +176,7 @@ const Saint: FC<{}> = () => {
                         {files.map((file) => (
                             <FileItem {...file} preview />
                         ))}
-                    </Dropzone>
+                    </Dropzone>)}
                 </div>
                 <div className="button-container">
                     <button type="button" className="cancel-button" onClick={navigateToIndex}>Cancel</button>
