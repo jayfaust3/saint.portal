@@ -3,9 +3,10 @@ import { FileValidated } from "@dropzone-ui/react";
 import { Service } from '../../models/Service';
 import { APIResponse } from '../../models/api/APIResponse';
 import { File } from '../../models/file/File';
+import { Saint } from '../../models/saint/Saint';
 import { FileService } from './FileService';
 
-const useGetFileByUrlService = (fileUrl: string, assignCallback: (files: Array<FileValidated>) => void) => {
+const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array<FileValidated>) => void) => {
     const [result, setResult] = useState<Service<{}>>({
         status: 'loading'
     });
@@ -13,34 +14,36 @@ const useGetFileByUrlService = (fileUrl: string, assignCallback: (files: Array<F
     const apiService = new FileService();
 
     useEffect(() => {
-        setResult({ status: 'loading' });
+        if (saintState.imageURL) {
+            setResult({ status: 'loading' });
 
-        const getData = async () => {
-            const apiResponse: APIResponse<File> = await apiService.getFile(fileUrl);
+            const getData = async () => {
+                const apiResponse: APIResponse<File> = await apiService.getFile(saintState.imageURL!);
 
-            const data: File = apiResponse.data;
+                const data: File = apiResponse.data;
 
-            const fileContentResponse: Response = await fetch(data.content);
+                const fileContentResponse: Response = await fetch(data.content);
 
-            const fileContentBlob: Blob = await fileContentResponse.blob();
+                const fileContentBlob: Blob = await fileContentResponse.blob();
 
-            const fileContent = new File([fileContentBlob], data.name, { type: 'image/png' });
+                const fileContent = new File([fileContentBlob], data.name, { type: 'image/png' });
 
-            const newState: Array<FileValidated> = [
-                {
-                    id: data.name,
-                    valid: true,
-                    file: fileContent
-                }
-            ];
+                const newState: Array<FileValidated> = [
+                    {
+                        id: data.name,
+                        valid: true,
+                        file: fileContent
+                    }
+                ];
 
-            assignCallback(newState);
+                assignCallback(newState);
 
-            setResult({ status: 'loaded', payload: {} });
-        };
+                setResult({ status: 'loaded', payload: {} });
+            };
 
-        getData().catch(error => setResult({ status: 'error', error }));
-    });
+            getData().catch(error => setResult({ status: 'error', error }));
+        }
+    }, [saintState]);
 
     return result;
 };

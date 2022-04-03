@@ -44,9 +44,7 @@ const Saint: FC<{}> = () => {
 
         saveSaintAction = updateSaint;
 
-        if (saint.imageURL) {
-            getFileService = useGetFileByUrlService(saint.imageURL, setFiles);
-        }
+        getFileService = useGetFileByUrlService(saint, setFiles);
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +105,7 @@ const Saint: FC<{}> = () => {
     return (
         <div className="card">
             <p className="form-title">Who's this Saint?</p>
-            {getSaintService.status === 'loaded' && 
+            {getSaintService.status === 'loaded' && getFileService ? getFileService.status === 'loaded' : true &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Name</label>
