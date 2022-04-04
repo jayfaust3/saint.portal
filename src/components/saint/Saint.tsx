@@ -192,7 +192,7 @@ const Saint: FC<{}> = () => {
             {saveSaintService.status === 'loaded' && (
                 <div>Your Saint has been submitted.</div>
             )}
-            {(saveSaintService.status === 'error' || (getFileService ? getFileService.status === 'error' : false)) && (
+            {saveSaintService.status === 'error' && (
                 <div>
                     Unable to submit Saint.
                 </div>
