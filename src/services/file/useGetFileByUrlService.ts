@@ -18,7 +18,7 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
             setResult({ status: 'loading' });
 
             const getData = async () => {
-                const apiResponse: APIResponse<File> = await apiService.getFile(saintState.imageURL!);
+                const apiResponse: APIResponse<File> = await apiService.getFile(saintState.imageURL!.replace('s3-server', 'localhost:5000'));
 
                 const data: File = apiResponse.data;
 
