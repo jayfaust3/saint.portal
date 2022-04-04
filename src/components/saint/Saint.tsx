@@ -182,7 +182,9 @@ const Saint: FC<{}> = () => {
                 </div>
             </form>)}
 
-            {(getSaintService.status === 'loading' || saveSaintService.status === 'loading') && (
+            {(getSaintService.status === 'loading' || 
+            saveSaintService.status === 'loading' ||
+            (getFileService ? getFileService.status === 'loaded' : true)) && (
                 <div className="loader-container">
                     <Loader />
                 </div>
@@ -190,7 +192,7 @@ const Saint: FC<{}> = () => {
             {saveSaintService.status === 'loaded' && (
                 <div>Your Saint has been submitted.</div>
             )}
-            {saveSaintService.status === 'error' && (
+            {(saveSaintService.status === 'error' || (getFileService ? getFileService.status === 'error' : false)) && (
                 <div>
                     Unable to submit Saint.
                 </div>
