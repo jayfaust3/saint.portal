@@ -184,7 +184,7 @@ const Saint: FC<{}> = () => {
 
             {(getSaintService.status === 'loading' || 
             saveSaintService.status === 'loading' ||
-            (getFileService ? getFileService.status === 'loaded' : true)) && (
+            (getFileService ? getFileService.status === 'loaded' : false)) && (
                 <div className="loader-container">
                     <Loader />
                 </div>
