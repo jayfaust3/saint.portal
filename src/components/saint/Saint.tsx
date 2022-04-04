@@ -26,7 +26,7 @@ const Saint: FC<{}> = () => {
     const [saint, setSaint] = React.useState<Saint>({ id, active: true });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    let getFileService: Service<{}> | undefined = undefined;
+    let getFileService: Service<{}> = useGetFileByUrlService(saint, setFiles);;
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     
@@ -43,8 +43,6 @@ const Saint: FC<{}> = () => {
         saveSaintService = putSaintService;
 
         saveSaintAction = updateSaint;
-
-        getFileService = useGetFileByUrlService(saint, setFiles);
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +103,7 @@ const Saint: FC<{}> = () => {
     return (
         <div className="card">
             <p className="form-title">Who's this Saint?</p>
-            {getSaintService.status === 'loaded' && getFileService ? getFileService.status === 'loaded' : true &&
+            {getSaintService.status === 'loaded' && getFileService.status === 'loaded' &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Name</label>
@@ -163,7 +161,7 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                   {getFileService ? getFileService.status === 'loaded' : true &&
+                   {getFileService.status === 'loaded' &&
                    (<Dropzone 
                         onChange={handleAvatarChange}
                         value={files}
@@ -184,7 +182,7 @@ const Saint: FC<{}> = () => {
 
             {(getSaintService.status === 'loading' || 
             saveSaintService.status === 'loading' ||
-            (getFileService ? getFileService.status === 'loaded' : false)) && (
+            getFileService.status === 'loading') && (
                 <div className="loader-container">
                     <Loader />
                 </div>

@@ -42,6 +42,8 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
             };
 
             getData().catch(error => setResult({ status: 'error', error }));
+        } else {
+            setResult({ status: 'loaded', payload: {} });
         }
     }, [saintState]);
 
