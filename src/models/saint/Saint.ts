@@ -9,5 +9,5 @@ export interface Saint {
     region?: Region;
     martyred?: boolean;
     notes?: string;
-    imageURL?: string;
+    hasAvatar: boolean;
 }

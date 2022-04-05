@@ -23,10 +23,10 @@ const Saint: FC<{}> = () => {
     const create: boolean = !id;
     let saveSaintService: Service<APIResponse<Saint>>;
     let saveSaintAction: (saint: Saint) => Promise<void>;
-    const [saint, setSaint] = React.useState<Saint>({ id, active: true });
+    const [saint, setSaint] = React.useState<Saint>({ id, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    let getFileService: Service<{}> = useGetFileByUrlService(saint, setFiles);;
+    let getFileService: Service<{}> = useGetFileByUrlService(saint, setFiles);
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     
@@ -91,7 +91,12 @@ const Saint: FC<{}> = () => {
 
             setSaint(prevSaint => ({
                 ...prevSaint,
-                imageURL: fileResponse.data.url
+                hasAvatar: true
+            }));
+        } else {
+            setSaint(prevSaint => ({
+                ...prevSaint,
+                hasAvatar: false
             }));
         }
         

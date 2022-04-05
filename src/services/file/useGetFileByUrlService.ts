@@ -14,11 +14,11 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
     const apiService = new FileService();
 
     useEffect(() => {
-        if (saintState.imageURL) {
+        if (saintState.hasAvatar) {
             setResult({ status: 'loading' });
 
             const getData = async () => {
-                const apiResponse: APIResponse<File> = await apiService.getFile(saintState.imageURL!.replace('http:/', ''));
+                const apiResponse: APIResponse<File> = await apiService.getFile('saint', 'images', saintState.name!);
 
                 const data: File = apiResponse.data;
 

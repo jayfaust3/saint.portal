@@ -27,12 +27,12 @@ export class FileService {
         return apiResponse;
     }
 
-    public async getFile(fileUrl: string): Promise<APIResponse<File>> {
+    public async getFile(bucketName: string, path: string, name: string): Promise<APIResponse<File>> {
         const responseBuffer: Response  = await fetch(
-            fileUrl, 
+            `/files?bucketName=${bucketName}&path=${path}&name=${name}`, 
             { 
                 method: 'GET', 
-                headers: this._headers
+                headers: this._headers,
             }
         );
 
