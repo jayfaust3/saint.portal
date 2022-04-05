@@ -8,7 +8,6 @@ import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
-import { File } from '../../models/file/File';
 import { DropdownModel } from '../../models/component/DropdownModel';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
@@ -82,7 +81,7 @@ const Saint: FC<{}> = () => {
         if (files?.length) {
             const file: FileValidated = files[0];
 
-            const fileResponse: APIResponse<File> = await fileService.postFile({
+            await fileService.postFile({
                 name: `${saint.name}-${new Date().toISOString()}`,
                 content: Buffer.from(await file.file.arrayBuffer()).toString('base64'),
                 bucketName: 'saint',
