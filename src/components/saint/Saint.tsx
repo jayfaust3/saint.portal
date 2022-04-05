@@ -69,9 +69,7 @@ const Saint: FC<{}> = () => {
         }));
     };
 
-    const handleAvatarChange = (incommingFiles: Array<FileValidated>) => {
-        setFiles(incommingFiles);
-    }
+    const handleAvatarChange = (incomingFiles: Array<FileValidated>) => setFiles(incomingFiles);
 
     const navigateToIndex = () => navigate('/');
 
