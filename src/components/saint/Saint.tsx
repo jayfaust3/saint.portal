@@ -76,6 +76,8 @@ const Saint: FC<{}> = () => {
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        let hasAvatar: boolean = false;
+
         if (files?.length) {
             const file: FileValidated = files[0];
 
@@ -86,18 +88,13 @@ const Saint: FC<{}> = () => {
                 path: 'images'
             });
 
-            setSaint(prevSaint => ({
-                ...prevSaint,
-                hasAvatar: true
-            }));
-        } else {
-            setSaint(prevSaint => ({
-                ...prevSaint,
-                hasAvatar: false
-            }));
+            hasAvatar = true;
         }
         
-        await saveSaintAction(saint);
+        await saveSaintAction({
+            ...saint,
+            hasAvatar
+        });
 
         navigateToIndex();
     };
