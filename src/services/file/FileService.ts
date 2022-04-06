@@ -40,10 +40,15 @@ export class FileService {
 
         const s3Url: string = fileServerApiResponse.data.replace('http://', '/');
 
+        const s3RequestHeaders = new Headers();
+        s3RequestHeaders.append('Access-Control-Allow-Origin', '*');
+        s3RequestHeaders.append('Access-Control-Allow-Headers', '*');
+
         const s3UrlResponseBuffer: Response  = await fetch(
             s3Url, 
             { 
-                method: 'GET'
+                method: 'GET',
+                headers: s3RequestHeaders
             }
         );
 
