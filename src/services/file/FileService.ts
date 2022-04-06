@@ -28,7 +28,7 @@ export class FileService {
     }
 
     public async getFile(bucketName: string, path: string, name: string): Promise<APIResponse<File>> {
-        const responseBuffer: Response  = await fetch(
+        const fileUrlResponseBuffer: Response  = await fetch(
             `/files?bucketName=${bucketName}&path=${path}&name=${name}`, 
             { 
                 method: 'GET', 
@@ -36,8 +36,28 @@ export class FileService {
             }
         );
 
-        const apiResponse = await responseBuffer.json() as APIResponse<File>;
+        const fileServerApiResponse = await fileUrlResponseBuffer.json() as APIResponse<string>;
 
-        return apiResponse;
+        const s3Url: string = fileServerApiResponse.data.replace('http://', '/');
+
+        const s3UrlResponseBuffer: Response  = await fetch(
+            s3Url, 
+            { 
+                method: 'GET'
+            }
+        );
+
+        const s3Response = await s3UrlResponseBuffer.json();
+
+        const s3ResponseBody = s3Response.Body as Buffer;
+
+        return {
+            data: {
+                bucketName,
+                path,
+                name,
+                content: s3ResponseBody.toString('base64')
+            }
+        };
     }
 }
