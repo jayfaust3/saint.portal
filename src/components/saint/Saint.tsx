@@ -84,7 +84,7 @@ const Saint: FC<{}> = () => {
             await fileService.postFile({
                 name: `${saint.name}-${new Date().toISOString()}`,
                 content: Buffer.from(await file.file.arrayBuffer()).toString('base64'),
-                bucketName: 'saint',
+                bucketName: 'saint-bucket',
                 path: 'images'
             });
 
