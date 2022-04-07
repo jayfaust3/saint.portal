@@ -38,7 +38,7 @@ export class FileService {
 
         const fileServerApiResponse = await fileUrlResponseBuffer.json() as APIResponse<string>;
 
-        const s3Url: string = fileServerApiResponse.data.replace('http://', '/');
+        const s3Url: string = fileServerApiResponse.data.replace('http://s3-server/', '/s3');
 
         const s3RequestHeaders = new Headers();
         s3RequestHeaders.append('Access-Control-Allow-Origin', '*');

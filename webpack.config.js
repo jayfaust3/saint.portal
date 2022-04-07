@@ -45,7 +45,7 @@ module.exports = {
             target: "http://localhost:3001",
             changeOrigin: true
           },
-          "/s3-server": {
+          "/s3": {
             target: "http://localhost:5000",
             changeOrigin: true
           }
