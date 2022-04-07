@@ -27,9 +27,9 @@ export class FileService {
         return apiResponse;
     }
 
-    public async getFile(bucketName: string, path: string, name: string): Promise<APIResponse<File>> {
+    public async getFile(bucketName: string, name: string): Promise<APIResponse<File>> {
         const fileUrlResponseBuffer: Response  = await fetch(
-            `/files?bucketName=${bucketName}&path=${path}&name=${name}`, 
+            `/files?bucketName=${bucketName}&name=${name}`, 
             { 
                 method: 'GET', 
                 headers: this._headers,
@@ -59,7 +59,6 @@ export class FileService {
         return {
             data: {
                 bucketName,
-                path,
                 name,
                 content: s3ResponseBody.toString('base64')
             }

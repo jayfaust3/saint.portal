@@ -82,10 +82,9 @@ const Saint: FC<{}> = () => {
             const file: FileValidated = files[0];
 
             await fileService.postFile({
-                name: `${saint.name}-${new Date().toISOString()}`,
+                name: saint.name!.replace(/\s/g, '-'),
                 content: Buffer.from(await file.file.arrayBuffer()).toString('base64'),
-                bucketName: 'saint-bucket',
-                path: 'images'
+                bucketName: 'saint-bucket'
             });
 
             hasAvatar = true;
