@@ -79,11 +79,19 @@ const Saint: FC<{}> = () => {
         let hasAvatar: boolean = false;
 
         if (files?.length) {
-            const file: FileValidated = files[0];
+            const validatedFile: FileValidated = files[0];
+
+            const file = validatedFile.file;
+
+            // const fileType: string = file.name.split('.').pop()!;
+
+            // let prefix: string = '';
+
+            const fileContent: string = Buffer.from(await file.arrayBuffer()).toString('base64url');
 
             await fileService.postFile({
                 name: saint.name!.replace(/\s/g, '-'),
-                content: Buffer.from(await file.file.arrayBuffer()).toString('base64url'),
+                content: fileContent,
                 bucketName: 'saint-bucket'
             });
 
@@ -164,7 +172,7 @@ const Saint: FC<{}> = () => {
                         onChange={handleAvatarChange}
                         value={files}
                         maxFiles={1}
-                        accept={'image/*'}
+                        accept={'image/jpeg, image/png'}
                         behaviour={'replace'}
                     >
                         {files.map((file) => (
