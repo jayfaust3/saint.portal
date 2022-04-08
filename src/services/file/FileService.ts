@@ -28,39 +28,21 @@ export class FileService {
     }
 
     public async getFile(bucketName: string, name: string): Promise<APIResponse<File>> {
-        const fileUrlResponseBuffer: Response  = await fetch(
-            `/files?bucketName=${bucketName}&name=${name}`, 
+        const responseBuffer: Response  = await fetch(
+            `/files/${bucketName}|${name}`, 
             { 
                 method: 'GET', 
                 headers: this._headers,
             }
         );
 
-        const fileServerApiResponse = await fileUrlResponseBuffer.json() as APIResponse<string>;
-
-        const s3Url: string = fileServerApiResponse.data.replace('http://s3-server/', '/s3');
-
-        const s3RequestHeaders = new Headers();
-        s3RequestHeaders.append('Access-Control-Allow-Origin', '*');
-        s3RequestHeaders.append('Access-Control-Allow-Headers', '*');
-
-        const s3UrlResponseBuffer: Response  = await fetch(
-            s3Url, 
-            { 
-                method: 'GET',
-                headers: s3RequestHeaders
-            }
-        );
-
-        const s3Response = await s3UrlResponseBuffer.json();
-
-        const s3ResponseBody = s3Response.Body as Buffer;
+        const apiResponse = await responseBuffer.json() as APIResponse<File>;
 
         return {
             data: {
                 bucketName,
                 name,
-                content: s3ResponseBody.toString('base64')
+                content: apiResponse.data.content
             }
         };
     }
