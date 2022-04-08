@@ -83,7 +83,7 @@ const Saint: FC<{}> = () => {
 
             await fileService.postFile({
                 name: saint.name!.replace(/\s/g, '-'),
-                content: Buffer.from(await file.file.arrayBuffer()).toString('base64'),
+                content: Buffer.from(await file.file.arrayBuffer()),
                 bucketName: 'saint-bucket'
             });
 
