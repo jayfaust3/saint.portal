@@ -83,11 +83,9 @@ const Saint: FC<{}> = () => {
 
             const file = validatedFile.file;
 
-            // const fileType: string = file.name.split('.').pop()!;
-
-            // let prefix: string = '';
-
-            const fileContent: string = Buffer.from(await file.arrayBuffer()).toString('base64url');
+            const fileContent: string = Buffer.from(
+                await file.arrayBuffer()
+            ).toString('base64url');
 
             await fileService.postFile({
                 name: saint.name!.replace(/\s/g, '-'),
