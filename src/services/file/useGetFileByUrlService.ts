@@ -20,18 +20,22 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
             const getData = async () => {
                 const apiResponse: APIResponse<File> = await apiService.getFile('saint-bucket', saintState.name!.replace(/\s/g, '-'));
 
-                const data: File = apiResponse.data;
+                const apiResponseData: File = apiResponse.data;
 
+                const base64Response: Response = await fetch(`data:image/jpeg;base64,${apiResponseData.content}`);
+
+                const fileContentBlob: Blob = await base64Response.blob();
+                
                 const fileContent = new File(
-                    [data.content],
-                    data.name,
+                    [fileContentBlob],
+                    apiResponseData.name,
                     {
                         type: 'image/jpeg'
                     });
 
                 const newState: Array<FileValidated> = [
                     {
-                        id: data.name,
+                        id: apiResponseData.name,
                         valid: true,
                         file: fileContent
                     }
