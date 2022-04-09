@@ -170,7 +170,7 @@ const Saint: FC<{}> = () => {
                         onChange={handleAvatarChange}
                         value={files}
                         maxFiles={1}
-                        accept={'image/jpeg'}
+                        accept={'image/jpeg, image/jpg'}
                         behaviour={'replace'}
                     >
                         {files.map((file) => (
