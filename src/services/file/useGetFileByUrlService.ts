@@ -22,7 +22,12 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
 
                 const data: File = apiResponse.data;
 
-                const fileContent = new File([data.content], data.name);
+                const fileContent = new File(
+                    [data.content],
+                    data.name,
+                    {
+                        type: 'image/jpeg'
+                    });
 
                 const newState: Array<FileValidated> = [
                     {
