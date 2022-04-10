@@ -21,7 +21,8 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
                 const apiResponse: APIResponse<File> = await apiService.getFile(
                     'saint-bucket',
                     'images',
-                    saintState.name!.replace(/\s/g, '-')
+                    saintState.name!.replace(/\s/g, '-'),
+                    'image/jpeg'
                 );
 
                 const apiResponseData: File = apiResponse.data;

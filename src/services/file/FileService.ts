@@ -27,9 +27,9 @@ export class FileService {
         return apiResponse;
     }
 
-    public async getFile(bucketName: string, directory: string, name: string): Promise<APIResponse<File>> {
+    public async getFile(bucketName: string, directory: string, name: string, contentType: string): Promise<APIResponse<File>> {
         const responseBuffer: Response  = await fetch(
-            `/files/${bucketName}|${directory}|${name}`, 
+            `/files/${bucketName}|${directory}|${name}|${contentType}`, 
             { 
                 method: 'GET', 
                 headers: this._headers,
@@ -43,6 +43,7 @@ export class FileService {
                 bucketName,
                 directory,
                 name,
+                contentType,
                 content: apiResponse.data.content
             }
         };
