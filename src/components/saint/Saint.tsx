@@ -90,6 +90,7 @@ const Saint: FC<{}> = () => {
             await fileService.postFile({
                 name: saint.name!.replace(/\s/g, '-'),
                 content: fileContent,
+                directory: 'images',
                 bucketName: 'saint-bucket'
             });
 
