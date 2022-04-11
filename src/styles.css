@@ -90,10 +90,6 @@ h1 {
   font-weight: 300;
   margin: 0;
 }
-.price {
-  color: #625f63;
-  margin: 10px 0;
-}
 .saint-info {
   margin: 30px -15px 0;
   display: flex;
@@ -110,9 +106,6 @@ h1 {
 .saint-info .data {
   font-size: 20px;
   margin: 5px;
-}
-.crew {
-  margin-top: 20px;
 }
 .form-title {
   font-size: 20px;
@@ -134,6 +127,11 @@ input {
 input:focus {
   outline-color: #1f8dcc;
   outline-width: 3px;
+}
+.left-justified-input {
+  display: inline-block;
+  width: 30px;
+  text-align: left;
 }
 .button-container {
   align-items: end;

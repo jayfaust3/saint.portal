@@ -44,7 +44,7 @@ const Saint: FC<{}> = () => {
         saveSaintAction = updateSaint;
     }
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         event.persist();
 
         setSaint(prevSaint => ({
@@ -62,10 +62,26 @@ const Saint: FC<{}> = () => {
         }));
     };
 
+    const handleYearChange = (event: ChangeEvent<HTMLInputElement>) => {
+        event.persist();
+        
+        setSaint(prevSaint => ({
+            ...prevSaint,
+            [event.target.name]: event.target.valueAsNumber
+        }));
+    };
+
     const handleRegionChange = (event: SingleValue<DropdownModel>, actionMeta: ActionMeta<DropdownModel>) => {        
         setSaint(prevSaint => ({
             ...prevSaint,
             region: event!.value as Region
+        }));
+    };
+
+    const handleNotesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setSaint(prevSaint => ({
+            ...prevSaint,
+            notes: event.target.value
         }));
     };
 
@@ -107,63 +123,68 @@ const Saint: FC<{}> = () => {
     };
 
     return (
-        <div className="card">
-            <p className="form-title">Who's this Saint?</p>
+        <div className='card'>
+            <p className='form-title'>Who's this Saint?</p>
             {getSaintService.status === 'loaded' && getFileService.status === 'loaded' &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Name</label>
                     <input
-                        type="text"
-                        name="name"
+                        type='text'
+                        name='name'
                         value={saint.name || ''}
-                        onChange={handleChange}
+                        onChange={handleNameChange}
+                        required
                     />
                 </div>
                 <div>
                     <label>Year Born</label>
                     <input
-                        type="text"
-                        name="yearOfBirth"
+                        type='number'
+                        name='yearOfBirth'
                         value={saint.yearOfBirth || 0}
-                        onChange={handleChange}
+                        onChange={handleYearChange}
+                        required
                     />
                 </div>
                 <div>
                     <label>Year Died</label>
                     <input
-                        type="text"
-                        name="yearOfDeath"
+                        type='number'
+                        name='yearOfDeath'
                         value={saint.yearOfDeath || 0}
-                        onChange={handleChange}
+                        onChange={handleYearChange}
+                        required
                     />
                 </div>
                 <div>
                     <label>Region</label>
                     <Select
                         options={regions}
-                        name="region"
+                        name='region'
                         onChange={handleRegionChange}
                         value={[...regions].filter(x => x.value === saint.region).pop()}
                     />
                 </div>
-                <div className="checkbox-container">
+                <div>
                     <label>Martyred?</label>
                     <input
-                        type="checkbox"
-                        name="martyred"
+                        className='left-justified-input'
+                        type='checkbox'
+                        name='martyred'
                         checked={saint.martyred}
                         onChange={handleMartyredChange}
                     />
                 </div>
                 <div>
                     <label>Notes</label>
-                    <input
-                        type="text"
-                        name="notes"
+                    <textarea
+                        rows={5}
+                        cols={200}
+                        name='notes'
                         value={saint.notes || ''}
-                        onChange={handleChange}
-                    />
+                        onChange={handleNotesChange}>
+                    </textarea>
                 </div>
                 <div>
                     <label>Avatar</label>
@@ -180,16 +201,16 @@ const Saint: FC<{}> = () => {
                         ))}
                     </Dropzone>)}
                 </div>
-                <div className="button-container">
-                    <button type="button" className="cancel-button" onClick={navigateToIndex}>Cancel</button>
-                    <button type="submit" className="action-button">Save</button>
+                <div className='button-container'>
+                    <button type='button' className='cancel-button' onClick={navigateToIndex}>Cancel</button>
+                    <button type='submit' className='action-button'>Save</button>
                 </div>
             </form>)}
 
             {(getSaintService.status === 'loading' || 
             saveSaintService.status === 'loading' ||
             getFileService.status === 'loading') && (
-                <div className="loader-container">
+                <div className='loader-container'>
                     <Loader />
                 </div>
             )}
