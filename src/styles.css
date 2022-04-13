@@ -124,13 +124,23 @@ input {
   border: 1px solid #a7a3a2;
   width: 100%;
 }
+textarea {
+  display: block;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: none;
+  border: 1px solid #a7a3a2;
+  width: 100%;
+  font-family: inherit;
+}
 input:focus {
   outline-color: #1f8dcc;
   outline-width: 3px;
 }
 .left-justified-input {
   display: inline-block;
-  width: 30px;
+  width: 18px;
   text-align: left;
 }
 .button-container {

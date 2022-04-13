@@ -49,7 +49,7 @@ const Saint: FC<{}> = () => {
 
         setSaint(prevSaint => ({
             ...prevSaint,
-            [event.target.name]: event.target.value
+            name: event.target.value
         }));
     };
 
@@ -180,7 +180,7 @@ const Saint: FC<{}> = () => {
                     <label>Notes</label>
                     <textarea
                         rows={5}
-                        cols={200}
+                        cols={120}
                         name='notes'
                         value={saint.notes || ''}
                         onChange={handleNotesChange}>
