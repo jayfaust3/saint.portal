@@ -36,7 +36,8 @@ const useGetFileByUrlService = (saintState: Saint, assignCallback: (files: Array
                     apiResponseData.name,
                     {
                         type: 'image/jpeg'
-                    });
+                    }
+                );
 
                 const newState: Array<FileValidated> = [
                     {

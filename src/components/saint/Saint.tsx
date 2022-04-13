@@ -12,7 +12,6 @@ import { DropdownModel } from '../../models/component/DropdownModel';
 import useSaintByIdService from '../../services/saint/useSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
-import useGetFileByUrlService from '../../services/file/useGetFileByUrlService';
 import { FileService } from '../../services/file/FileService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
@@ -24,8 +23,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, id);
-    let getFileService: Service<{}> = useGetFileByUrlService(saint, setFiles);
+    const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, setFiles, id);
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     
@@ -125,7 +123,7 @@ const Saint: FC<{}> = () => {
     return (
         <div className='card'>
             <p className='form-title'>Who's this Saint?</p>
-            {getSaintService.status === 'loaded' && getFileService.status === 'loaded' &&
+            {getSaintService.status === 'loaded' &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
                     <label>Name</label>
@@ -188,7 +186,7 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div>
                     <label>Avatar</label>
-                   {getFileService.status === 'loaded' &&
+                   {getSaintService.status === 'loaded' &&
                    (<Dropzone 
                         onChange={handleAvatarChange}
                         value={files}
@@ -208,8 +206,7 @@ const Saint: FC<{}> = () => {
             </form>)}
 
             {(getSaintService.status === 'loading' || 
-            saveSaintService.status === 'loading' ||
-            getFileService.status === 'loading') && (
+            saveSaintService.status === 'loading') && (
                 <div className='loader-container'>
                     <Loader />
                 </div>
