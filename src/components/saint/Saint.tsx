@@ -9,7 +9,7 @@ import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
 import { DropdownModel } from '../../models/component/DropdownModel';
-import useSaintByIdService from '../../services/saint/useSaintByIdService';
+import useGetSaintByIdService from '../../services/saint/useGetSaintByIdService';
 import usePostSaintService from '../../services/saint/usePostSaintService';
 import usePutSaintService from '../../services/saint/usePutSaintService';
 import { FileService } from '../../services/file/FileService';
@@ -23,7 +23,7 @@ const Saint: FC<{}> = () => {
     let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useSaintByIdService(saint, setSaint, setFiles, id);
+    const getSaintService: Service<{}> = useGetSaintByIdService(saint, setSaint, setFiles, id);
     const fileService = new FileService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     
@@ -77,6 +77,8 @@ const Saint: FC<{}> = () => {
     };
 
     const handleNotesChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        event.persist();
+
         setSaint(prevSaint => ({
             ...prevSaint,
             notes: event.target.value
