@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { FileValidated } from "@dropzone-ui/react";
-import { APIResponse } from '../../models/api/APIResponse';
-import { Saint } from '../../models/saint/Saint';
-import { File } from '../../models/file/File';
-import { FileService } from '../file/FileService';
-import { Service } from '../../models/Service';
+import { APIResponse } from '../../../models/api/APIResponse';
+import { Saint } from '../../../models/saint/Saint';
+import { SaintService } from '../crud/SaintService';
+import { File } from '../../../models/file/File';
+import { FileService } from '../../file/crud/FileService';
+import { Service } from '../../../models/Service';
 
-const useGetSaintByIdService = (
+const useGetSaintService = (
     initialSaintState: Saint,
     assignSaintCallback: (saint: Saint) => void,
     assignFileCallback: (files: Array<FileValidated>) => void,
@@ -21,21 +22,10 @@ const useGetSaintByIdService = (
             setResult({ status: 'loading' });
 
             if (saintId) {
-                const headers = new Headers();
-                headers.append('Content-Type', 'application/json; charset=utf-8');
-                headers.append('Access-Control-Allow-Origin', '*');
-                headers.append('Access-Control-Allow-Headers', '*');
+                const saintService = new SaintService();
 
                 const getData = async () => {
-                    const saintResponseBuffer: Response = await fetch(
-                        `/saints/${saintId}`,
-                        {
-                            method: 'GET',
-                            headers: headers
-                        }
-                    );
-
-                    const saintAPIResponse = await saintResponseBuffer.json() as APIResponse<Saint>;
+                    const saintAPIResponse: APIResponse<Saint> = await saintService.get(saintId);
 
                     const saintData: Saint = saintAPIResponse.data;
 
@@ -90,4 +80,4 @@ const useGetSaintByIdService = (
     return result;
 };
 
-export default useGetSaintByIdService;
+export default useGetSaintService;

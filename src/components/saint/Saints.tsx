@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader';
-import useSaintsService from '../../services/saint/useSaintsService';
+import useSaintsService from '../../services/saint/view/useGetSaintsService';
 
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Saints: React.FC<{}> = () => {
                     </div>
                 )}
                 {service.status === 'loaded' &&
-                    (service.payload?.data ?? []).map(saint => (
+                    (service.payload ?? []).map(saint => (
                         <div
                             className="saint-item"
                             onClick={() => navigate(`/saint/${saint.id}`)}

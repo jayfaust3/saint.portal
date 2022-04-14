@@ -1,5 +1,5 @@
-import { APIResponse } from '../../models/api/APIResponse';
-import { File } from '../../models/file/File';
+import { APIResponse } from '../../../models/api/APIResponse';
+import { File } from '../../../models/file/File';
 
 export class FileService {
     private readonly _headers: Headers;

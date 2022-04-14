@@ -2,45 +2,24 @@ import React, { ChangeEvent, FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
-import { Dropzone, FileItem, FileValidated } from "@dropzone-ui/react";
+import { Dropzone, FileItem, FileValidated } from '@dropzone-ui/react';
 import Loader from '../Loader';
-import { APIResponse } from '../../models/api/APIResponse';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
 import { DropdownModel } from '../../models/component/DropdownModel';
-import useGetSaintByIdService from '../../services/saint/useGetSaintByIdService';
-import usePostSaintService from '../../services/saint/usePostSaintService';
-import usePutSaintService from '../../services/saint/usePutSaintService';
-import { FileService } from '../../services/file/FileService';
+import useGetSaintService from '../../services/saint/view/useGetSaintService';
+import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
 const Saint: FC<{}> = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const create: boolean = !id;
-    let saveSaintService: Service<APIResponse<Saint>>;
-    let saveSaintAction: (saint: Saint) => Promise<void>;
     const [saint, setSaint] = React.useState<Saint>({ id, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useGetSaintByIdService(saint, setSaint, setFiles, id);
-    const fileService = new FileService();
+    const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, id);
+    const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
-    
-    if (create) {
-        const { postSaintService, publishSaint } = usePostSaintService();
-
-        saveSaintService = postSaintService;
-
-        saveSaintAction = publishSaint;
-
-    } else {
-        const { putSaintService, updateSaint } = usePutSaintService();
-
-        saveSaintService = putSaintService;
-
-        saveSaintAction = updateSaint;
-    }
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -92,32 +71,7 @@ const Saint: FC<{}> = () => {
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        let hasAvatar: boolean = false;
-
-        if (files?.length) {
-            const validatedFile: FileValidated = files[0];
-
-            const file = validatedFile.file;
-
-            const fileContent: string = Buffer.from(
-                await file.arrayBuffer()
-            ).toString('base64');
-
-            await fileService.postFile({
-                bucketName: 'saint-bucket',
-                directory: 'images',
-                name: saint.name!.replace(/\s/g, '-'),
-                contentType: 'image/jpeg',
-                content: fileContent
-            });
-
-            hasAvatar = true;
-        }
-        
-        await saveSaintAction({
-            ...saint,
-            hasAvatar
-        });
+        await saveSaint(saint, files?.pop());
 
         navigateToIndex();
     };
