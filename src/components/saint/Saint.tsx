@@ -16,23 +16,13 @@ const Saint: FC<{}> = () => {
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;
-    const [formInvalid, setFormInvalid] = React.useState<boolean>(create ? true : false);
+    const [formValid, setFormValid] = React.useState<boolean>(create);
     const [saint, setSaint] = React.useState<Saint>({ id: saintId, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
-
-    const saintInvalidState = () => {
-        if (!saint.name || !saint.yearOfBirth || !saint.yearOfDeath || !saint.region)
-            return true;
-
-        return false;
-    };
-
-    useEffect(() => {
-        setFormInvalid(prevFormInvalid => saintInvalidState());
-    }, [saint]);
+    useEffect(() => setFormValid(!saint.name || !saint.region || !saint.yearOfDeath || !saint.region), [saint]); 
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -84,7 +74,7 @@ const Saint: FC<{}> = () => {
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!saintInvalidState()) {
+        if (!formValid) {
             await saveSaint(saint, files?.pop());
 
             navigateToIndex();
@@ -172,7 +162,7 @@ const Saint: FC<{}> = () => {
                 </div>
                 <div className='button-container'>
                     <button type='button' className='cancel-button' onClick={navigateToIndex}>Cancel</button>
-                    <button type='submit' className='action-button' disabled={formInvalid}>Save</button>
+                    <button type='submit' className='action-button' disabled={!formValid}>Save</button>
                 </div>
             </form>)}
 
