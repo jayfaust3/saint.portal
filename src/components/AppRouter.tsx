@@ -9,7 +9,7 @@ export default function AppRouter() {
             <Routes>
               <Route path='/' element={<Saints />} />
               <Route path='/saint' element={<Saint />} />                      
-              <Route path='/saint/:id' element={<Saint />} />
+              <Route path='/saint/:saintId' element={<Saint />} />
             </Routes>               
         </div>
     );

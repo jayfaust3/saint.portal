@@ -14,10 +14,10 @@ import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
 const Saint: FC<{}> = () => {
     const navigate = useNavigate();
-    const { id } = useParams();
-    const [saint, setSaint] = React.useState<Saint>({ id, active: true, hasAvatar: false });
+    const { saintId } = useParams();
+    const [saint, setSaint] = React.useState<Saint>({ id: saintId, active: true, hasAvatar: false });
     const [files, setFiles] = React.useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, id);
+    const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
 
