@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
 import { Dropzone, FileItem, FileValidated } from '@dropzone-ui/react';
-import Loader from '../Loader';
+import Loader from '../common/Loader';
 import { Service } from '../../models/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';

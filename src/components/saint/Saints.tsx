@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../Loader';
+import Loader from '../common/Loader';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 
 const Saints: React.FC<{}> = () => {
