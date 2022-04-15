@@ -87,7 +87,7 @@ const Saint: FC<{}> = () => {
             {getSaintService.status === 'loaded' &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
-                    <label>Name</label>
+                    <label className='required'>Name</label>
                     <input
                         type='text'
                         name='name'
@@ -97,7 +97,7 @@ const Saint: FC<{}> = () => {
                     />
                 </div>
                 <div>
-                    <label>Year Born</label>
+                    <label className='required'>Year Born</label>
                     <input
                         type='number'
                         name='yearOfBirth'
@@ -107,7 +107,7 @@ const Saint: FC<{}> = () => {
                     />
                 </div>
                 <div>
-                    <label>Year Died</label>
+                    <label className='required'>Year Died</label>
                     <input
                         type='number'
                         name='yearOfDeath'
@@ -117,7 +117,7 @@ const Saint: FC<{}> = () => {
                     />
                 </div>
                 <div>
-                    <label>Region</label>
+                    <label className='required'>Region</label>
                     <Select
                         options={regions}
                         name='region'
