@@ -74,7 +74,7 @@ const Saint: FC<{}> = () => {
     const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!formValid) {
+        if (formValid) {
             await saveSaint(saint, files?.pop());
 
             navigateToIndex();
