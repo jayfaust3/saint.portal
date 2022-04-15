@@ -158,6 +158,10 @@ input:focus {
   color: #fff;
   cursor: pointer;
 }
+.action-button:disabled {
+  background-color: #98d4f7;
+  cursor: not-allowed;
+}
 .cancel-button {
   font-size: 18px;
   padding: 8px 15px;
