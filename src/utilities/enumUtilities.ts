@@ -8,3 +8,7 @@ export function enumToDropDownModelArray(enumType: object): Array<DropdownModel>
         };
     }).sort((a, b) => a.label.localeCompare(b.label));
 }
+
+export function enumValueToFriendlyName(enumType: object, enumValue: object): string | undefined {
+    return Object.entries(enumType).filter((entry) => entry[0] === enumValue as unknown as string).map((entry) => entry[1]).pop();
+}

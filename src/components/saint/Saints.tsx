@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../common/Loader';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
+import { Region } from '../../models/saint/Region';
+import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
@@ -31,7 +33,10 @@ const Saints: React.FC<{}> = () => {
                             key={saint.id}
                         >
                             <div>
-                                <h5>{saint.name + ' of ' + saint.region}</h5>
+                                
+                            </div>
+                            <div>
+                                <h5>{saint.name + ' of ' + enumValueToFriendlyName(Region, saint.region! as unknown as object)}</h5>
                                 <p>{saint.yearOfBirth + ' - ' + saint.yearOfDeath}</p>
                             </div>
                         </div>
