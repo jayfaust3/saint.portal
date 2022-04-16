@@ -30,7 +30,10 @@ const Saints: React.FC<{}> = () => {
                             onClick={() => navigate(`/saint/${saint.id}`)}
                             key={saint.id}
                         >
-                            {saint.name + ' of ' + saint.region + ', ' + saint.yearOfBirth + ' - ' + saint.yearOfDeath}
+                            <div>
+                                <h5>{saint.name + ' of ' + saint.region}</h5>
+                                <p>{saint.yearOfBirth + ' - ' + saint.yearOfDeath}</p>
+                            </div>
                         </div>
                     ))}
                 <div className="button-container">
