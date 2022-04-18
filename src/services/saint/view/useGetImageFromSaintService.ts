@@ -33,7 +33,7 @@ const useGetImageFromSaintService = (saint: Saint) => {
 
                 getData().catch(error => setResult({ status: 'error', error }));
             } else {
-                setResult({ status: 'loaded', payload: undefined });
+                setResult({ status: 'loaded', payload: 'dafault-avatar.jpeg' });
             }
         },
         [saint]

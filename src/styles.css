@@ -147,6 +147,13 @@ input:focus {
   width: 18px;
   text-align: left;
 }
+.image-container {
+  /* height: 30px;
+  width: 30px;
+  display: inline-block;
+  text-align: left;
+  align-items: start; */
+}
 .button-container {
   align-items: end;
   text-align: right;
