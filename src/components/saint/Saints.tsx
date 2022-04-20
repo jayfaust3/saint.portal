@@ -36,7 +36,7 @@ const Saints: React.FC<{}> = () => {
                             <div className='image-container'>
                                 <SaintAvatar { ...saint }/>
                             </div>
-                            <div className='button-container'>
+                            <div>
                                 <h5>{saint.name + ' of ' + enumValueToFriendlyName(Region, saint.region! as unknown as object)}</h5>
                                 <p>{saint.yearOfBirth + ' - ' + saint.yearOfDeath}</p>
                             </div>

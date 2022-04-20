@@ -7,15 +7,16 @@ const SaintAvatar: React.FC<Saint> = (props: PropsWithChildren<Saint>) => {
     const imageService = useGetImageFromSaintService(props);
     
     return (
-        <div>{imageService.status === 'loaded' && (
-            <img src={imageService.payload}/>)
+        <>
+            {imageService.status === 'loaded' && (
+                <img width={100} src={imageService.payload}/>)
             }
             {imageService.status === 'loading' && (
                 <div className='loader-container'>
                     <Loader />
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

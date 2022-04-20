@@ -35,7 +35,7 @@ h1 {
   font-weight: bold;
 }
 .slogan {
-  max-width: 320px;
+  max-width: 520px;
   margin: 10px auto 0;
 }
 .card {
@@ -48,6 +48,9 @@ h1 {
   min-height: 100px;
 }
 .saint-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   padding: 10px 30px;
   margin: 0 -30px;
   transition: all 0.25s ease;
@@ -142,17 +145,19 @@ input:focus {
   outline-color: #1f8dcc;
   outline-width: 3px;
 }
+img {
+  width: 100px;
+  display: block;
+}
 .left-justified-input {
   display: inline-block;
   width: 18px;
   text-align: left;
 }
 .image-container {
-  /* height: 30px;
-  width: 30px;
-  display: inline-block;
-  text-align: left;
-  align-items: start; */
+  object-fit: contain;
+  width: 100px;
+  height: auto;
 }
 .button-container {
   align-items: end;
