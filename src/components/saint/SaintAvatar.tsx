@@ -9,7 +9,7 @@ const SaintAvatar: React.FC<Saint> = (props: PropsWithChildren<Saint>) => {
     return (
         <>
             {imageService.status === 'loaded' && (
-                <img width={100} src={imageService.payload}/>)
+                <img src={imageService.payload}/>)
             }
             {imageService.status === 'loading' && (
                 <div className='loader-container'>
