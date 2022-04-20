@@ -158,10 +158,11 @@ img {
   margin-left: auto;
 }
 .image-container {
-  object-fit: contain;
+  object-fit: scale-down;
   width: 100px;
   height: auto;
   margin-right: auto;
+  position: sticky;
 }
 .button-container {
   align-items: end;
