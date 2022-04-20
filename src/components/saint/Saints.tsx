@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../common/Loader';
 import SaintAvatar from './SaintAvatar';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import { Region } from '../../models/saint/Region';
 import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
+import { Saint } from '../../models/saint/Saint';
+import { SessionStorageService } from '../../services/browser/SessionStorageService';
 
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
     const saintDataService = useSaintsService();
+    const sessionStorageService = new SessionStorageService();
+    const itemsPerPage: number = 5;
+    const indexPageNumberKey: string = 'saint:IndexPageNumber';
+    const startPageNumber = sessionStorageService.getItem<number>(indexPageNumberKey, false) ?? 1;
+    const [pageNumber, setPageNumber] = useState<number>(startPageNumber);
+    const startIndex: number = (pageNumber - 1) * itemsPerPage;
+    const endIndex: number = startIndex + itemsPerPage;
 
     return (
         <>
@@ -26,25 +35,28 @@ const Saints: React.FC<{}> = () => {
                         <Loader />
                     </div>
                 )}
-                {saintDataService.status === 'loaded' &&
-                    (saintDataService.payload).map(saint => (
-                        <div
-                            className='saint-item'
-                            onClick={() => navigate(`/saint/${saint.id}`)}
-                            key={saint.id}
-                        >
-                            <div className='image-container'>
-                                <SaintAvatar { ...saint }/>
-                            </div>
-                            <div className='right'>
-                                <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
-                                <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
-                            </div>
-                        </div>
-                    ))}
                 <div className='button-container'>
-                    <button type='button' className='action-button' onClick={() => navigate('/saint')}>Create</button>
+                    <button type='button' className='action-button' onClick={() => navigate('/saint')}>+</button>
                 </div>
+                {saintDataService.status === 'loaded' &&
+                    saintDataService.payload.sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!)).slice(startIndex, endIndex).map(saint => 
+                        (
+                            <div
+                                className='saint-item'
+                                onClick={() => navigate(`/saint/${saint.id}`)}
+                                key={saint.id}
+                            >
+                                <div className='image-container'>
+                                    <SaintAvatar { ...saint }/>
+                                </div>
+                                <div className='right'>
+                                    <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
+                                    <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
+                                </div>
+                            </div>
+                        )
+                    )
+                }
             </div>
             {saintDataService.status === 'error' && (
                 <div>Error, unable to retrieve the Saints.</div>

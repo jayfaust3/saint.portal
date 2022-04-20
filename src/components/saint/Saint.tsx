@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
@@ -16,9 +16,9 @@ const Saint: FC<{}> = () => {
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;
-    const [formValid, setFormValid] = React.useState<boolean>(create);
-    const [saint, setSaint] = React.useState<Saint>({ id: saintId, active: true, hasAvatar: false });
-    const [files, setFiles] = React.useState<Array<FileValidated>>([]);
+    const [formValid, setFormValid] = useState<boolean>(create);
+    const [saint, setSaint] = useState<Saint>({ id: saintId, active: true, hasAvatar: false });
+    const [files, setFiles] = useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
@@ -82,7 +82,7 @@ const Saint: FC<{}> = () => {
 
     const navigateToIndex = () => navigate('/');
 
-    const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (formValid) {
