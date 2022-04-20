@@ -18,12 +18,12 @@ const useSaveSaintService = () => {
 
     const saveSaint = async (saint: Saint, file?: FileValidated) => {
         setService({ status: 'loading' });
-
-        validateSaint(saint);
-
-        const saintService = new SaintService();
             
         try {
+            validateSaint(saint);
+
+            const saintService = new SaintService();
+
             if (saint.id) {
                 await saintService.put(saint.id, saint);
             } else {
