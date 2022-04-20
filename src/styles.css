@@ -154,10 +154,14 @@ img {
   width: 18px;
   text-align: left;
 }
+.right {
+  margin-left: auto;
+}
 .image-container {
   object-fit: contain;
   width: 100px;
   height: auto;
+  margin-right: auto;
 }
 .button-container {
   align-items: end;
