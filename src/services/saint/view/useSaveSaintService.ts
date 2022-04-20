@@ -14,6 +14,10 @@ const useSaveSaintService = () => {
         if (!saint.name || !saint.region || !saint.yearOfDeath || !saint.region) {
             throw Error('Saint missing one or more required properties.');
         }
+
+        if (saint.yearOfBirth! > saint.yearOfDeath) {
+            throw Error(`Saint's Year Of Birth must not be after Year Of Death.`);
+        }
     };
 
     const saveSaint = async (saint: Saint, file?: FileValidated) => {

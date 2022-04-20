@@ -22,7 +22,7 @@ const Saint: FC<{}> = () => {
     const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
-    useEffect(() => setFormValid(!(!saint.name || !saint.region || !saint.yearOfDeath || !saint.region)), [saint]); 
+    useEffect(() => setFormValid(!(!saint.name || !saint.region || !saint.yearOfDeath || !saint.region || (saint.yearOfBirth! > saint.yearOfDeath))), [saint]); 
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         event.persist();
@@ -70,7 +70,7 @@ const Saint: FC<{}> = () => {
     const handleAvatarChange = (incomingFiles: Array<FileValidated>) => {
         setFiles(incomingFiles);
 
-        const hasAvatar: boolean = files.length > 0;
+        const hasAvatar: boolean = incomingFiles.length > 0;
 
         setSaint(prevSaint => ({
             ...prevSaint,
