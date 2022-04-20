@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileValidated } from "@dropzone-ui/react";
+import { FileValidated } from '@dropzone-ui/react';
 import { Service } from '../../../models/Service';
 import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';
