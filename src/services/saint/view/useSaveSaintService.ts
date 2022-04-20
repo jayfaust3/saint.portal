@@ -10,8 +10,16 @@ const useSaveSaintService = () => {
         status: 'init'
     });
 
+    const validateSaint = (saint: Saint) => {
+        if (!saint.name || !saint.region || !saint.yearOfDeath || !saint.region) {
+            throw Error('Saint missing one or more required properties.');
+        }
+    };
+
     const saveSaint = async (saint: Saint, file?: FileValidated) => {
         setService({ status: 'loading' });
+
+        validateSaint(saint);
 
         const saintService = new SaintService();
             
@@ -36,8 +44,6 @@ const useSaveSaintService = () => {
                     contentType: 'image/jpeg',
                     content: fileContent
                 });
-    
-                saint.hasAvatar = true;
             }
 
             setService({ status: 'loaded', payload: {} });
