@@ -16,8 +16,21 @@ const Saints: React.FC<{}> = () => {
     const indexPageNumberKey: string = 'saint:IndexPageNumber';
     const startPageNumber = sessionStorageService.getItem<number>(indexPageNumberKey, false) ?? 1;
     const [pageNumber, setPageNumber] = useState<number>(startPageNumber);
-    const startIndex: number = (pageNumber - 1) * itemsPerPage;
-    const endIndex: number = startIndex + itemsPerPage;
+    const getStartIndex = (page: number) => ((page - 1) * itemsPerPage);
+    const getEndIndex = (page: number) => (page + itemsPerPage);
+    const [startIndex, setStartIndex] = useState<number>(getStartIndex(startPageNumber));
+    const [endIndex, setEndIndex] = useState<number>(getEndIndex(startPageNumber));
+
+    const handleNavigation = (page: number) => {
+        setPageNumber(page);
+
+        sessionStorageService.setItem(indexPageNumberKey, page);
+
+        setStartIndex(getStartIndex(page));
+
+        setEndIndex(getEndIndex(page));
+    };
+
 
     return (
         <>
@@ -49,13 +62,17 @@ const Saints: React.FC<{}> = () => {
                                 <div className='image-container'>
                                     <SaintAvatar { ...saint }/>
                                 </div>
-                                <div className='right'>
+                                <div>
                                     <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
                                     <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
                                 </div>
                             </div>
                         )
-                    )
+                    ) &&
+                <div className='button-container'>
+                    <button type='button' className='action-button' disabled={pageNumber <= 1} onClick={() => handleNavigation(Math.max(1, pageNumber - 1))}>Previous Page</button>
+                    <button type='button' className='action-button' disabled={(pageNumber * itemsPerPage) <= saintDataService.payload.length} onClick={() => handleNavigation(Math.min(saintDataService.payload.length, pageNumber + 1))}>Next Page</button>
+                </div>
                 }
             </div>
             {saintDataService.status === 'error' && (
