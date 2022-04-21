@@ -49,10 +49,13 @@ const Saints: React.FC<{}> = () => {
                     </div>
                 )}
                 <div className='button-container'>
-                    <button type='button' className='action-button' onClick={() => navigate('/saint')}>+</button>
+                    <button type='button' className='action-button' onClick={() => navigate('/saint')}>Add</button>
                 </div>
                 {saintDataService.status === 'loaded' &&
-                    saintDataService.payload.sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!)).slice(startIndex, endIndex).map(saint => 
+                    saintDataService.payload
+                    .sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!))
+                    .slice(startIndex, endIndex)
+                    .map(saint => 
                         (
                             <div
                                 className='saint-item'
@@ -68,10 +71,12 @@ const Saints: React.FC<{}> = () => {
                                 </div>
                             </div>
                         )
-                    ) &&
+                    )
+                }
+                {saintDataService.status === 'loaded' &&
                 <div className='button-container'>
                     <button type='button' className='action-button' disabled={pageNumber <= 1} onClick={() => handleNavigation(Math.max(1, pageNumber - 1))}>Previous Page</button>
-                    <button type='button' className='action-button' disabled={(pageNumber * itemsPerPage) <= saintDataService.payload.length} onClick={() => handleNavigation(Math.min(saintDataService.payload.length, pageNumber + 1))}>Next Page</button>
+                    <button type='button' className='action-button' disabled={(pageNumber * itemsPerPage) >= saintDataService.payload.length} onClick={() => handleNavigation(Math.min(saintDataService.payload.length, pageNumber + 1))}>Next Page</button>
                 </div>
                 }
             </div>
