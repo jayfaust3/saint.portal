@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MaterialTable from 'material-table';
 import Loader from '../common/Loader';
 import SaintAvatar from './SaintAvatar';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
@@ -52,26 +53,43 @@ const Saints: React.FC<{}> = () => {
                     <button type='button' className='action-button' onClick={() => navigate('/saint')}>Add</button>
                 </div>
                 {saintDataService.status === 'loaded' &&
-                    saintDataService.payload
-                    .sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!))
-                    .slice(startIndex, endIndex)
-                    .map(saint => 
-                        (
-                            <div
-                                className='saint-item'
-                                onClick={() => navigate(`/saint/${saint.id}`)}
-                                key={saint.id}
-                            >
-                                <div className='image-container'>
-                                    <SaintAvatar { ...saint }/>
-                                </div>
-                                <div>
-                                    <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
-                                    <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
-                                </div>
-                            </div>
-                        )
-                    )
+                    // saintDataService.payload
+                    // .sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!))
+                    // .slice(startIndex, endIndex)
+                    // .map(saint =>
+                    //     (
+                    //         <div
+                    //             className='saint-item'
+                    //             onClick={() => navigate(`/saint/${saint.id}`)}
+                    //             key={saint.id}
+                    //         >
+                    //             <div className='image-container'>
+                    //                 <SaintAvatar { ...saint }/>
+                    //             </div>
+                    //             <div>
+                    //                 <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
+                    //                 <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
+                    //             </div>
+                    //         </div>
+                    //     )
+                    // )
+                    <MaterialTable
+                        title=''
+                        columns={[
+                            { title: "Adı", field: "name" },
+                            { title: "Soyadı", field: "surname" },
+                            { title: "Doğum Yılı", field: "birthYear", type: "numeric" },
+                            { title: "Doğum Yeri", field: "birthCity" },
+                        ]}
+                        data={[
+                            {
+                                name: "Mehmet",
+                                surname: "Baran",
+                                birthYear: 1987,
+                                birthCity: 63,
+                            },
+                        ]}
+                    />
                 }
                 {saintDataService.status === 'loaded' &&
                 <div className='button-container'>
