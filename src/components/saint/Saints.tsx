@@ -34,38 +34,25 @@ const Saints: React.FC<{}> = () => {
                     <button type='button' className='action-button' onClick={() => navigate('/saint')}>Add</button>
                 </div>
                 {saintDataService.status === 'loaded' &&
-                    // saintDataService.payload
-                    // .sort((a: Saint, b: Saint) => a.name!.localeCompare(b.name!))
-                    // .slice(startIndex, endIndex)
-                    // .map(saint =>
-                    //     (
-                    //         <div
-                    //             className='saint-item'
-                    //             onClick={() => navigate(`/saint/${saint.id}`)}
-                    //             key={saint.id}
-                    //         >
-                    //             <div className='image-container'>
-                    //                 <SaintAvatar { ...saint }/>
-                    //             </div>
-                    //             <div>
-                    //                 <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
-                    //                 <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
-                    //             </div>
-                    //         </div>
-                    //     )
-                    // )
                     <MaterialTable
                         title=''
                         icons={tableIcons}
                         columns={[
-                            { title: "Name", field: "name" },
-                            { title: "Surname", field: "surname" },
-                            { title: "Birth Year", field: "birthYear", type: "numeric" }
+                            {
+                                title: '',
+                                render: (saint) =>  <div className='image-container'>
+                                                        <SaintAvatar { ...saint }/>
+                                                    </div>
+                            },
+                            {
+                                title: '',
+                                render: (saint) =>  <div>
+                                                        <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
+                                                        <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
+                                                    </div>
+                            }
                         ]}
-                        data={[
-                            { name: "Mohammad", surname: "Faisal", birthYear: 1995 },
-                            { name: "Nayeem Raihan ", surname: "Shuvo", birthYear: 1994 }
-                        ]}
+                        data={saintDataService.payload}
                     />
                 }
             </div>
