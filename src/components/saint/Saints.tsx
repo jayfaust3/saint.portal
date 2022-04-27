@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import Loader from '../common/Loader';
+import tableIcons from '../utils/MaterialTableIcons';
 import SaintAvatar from './SaintAvatar';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import { Region } from '../../models/saint/Region';
@@ -12,26 +13,6 @@ import { SessionStorageService } from '../../services/browser/SessionStorageServ
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
     const saintDataService = useSaintsService();
-    const sessionStorageService = new SessionStorageService();
-    const itemsPerPage: number = 5;
-    const indexPageNumberKey: string = 'saint:IndexPageNumber';
-    const startPageNumber = sessionStorageService.getItem<number>(indexPageNumberKey, false) ?? 1;
-    const [pageNumber, setPageNumber] = useState<number>(startPageNumber);
-    const getStartIndex = (page: number) => ((page - 1) * itemsPerPage);
-    const getEndIndex = (page: number) => (page + itemsPerPage);
-    const [startIndex, setStartIndex] = useState<number>(getStartIndex(startPageNumber));
-    const [endIndex, setEndIndex] = useState<number>(getEndIndex(startPageNumber));
-
-    const handleNavigation = (page: number) => {
-        setPageNumber(page);
-
-        sessionStorageService.setItem(indexPageNumberKey, page);
-
-        setStartIndex(getStartIndex(page));
-
-        setEndIndex(getEndIndex(page));
-    };
-
 
     return (
         <>
@@ -75,27 +56,17 @@ const Saints: React.FC<{}> = () => {
                     // )
                     <MaterialTable
                         title=''
+                        icons={tableIcons}
                         columns={[
-                            { title: "Adı", field: "name" },
-                            { title: "Soyadı", field: "surname" },
-                            { title: "Doğum Yılı", field: "birthYear", type: "numeric" },
-                            { title: "Doğum Yeri", field: "birthCity" },
+                            { title: "Name", field: "name" },
+                            { title: "Surname", field: "surname" },
+                            { title: "Birth Year", field: "birthYear", type: "numeric" }
                         ]}
                         data={[
-                            {
-                                name: "Mehmet",
-                                surname: "Baran",
-                                birthYear: 1987,
-                                birthCity: 63,
-                            },
+                            { name: "Mohammad", surname: "Faisal", birthYear: 1995 },
+                            { name: "Nayeem Raihan ", surname: "Shuvo", birthYear: 1994 }
                         ]}
                     />
-                }
-                {saintDataService.status === 'loaded' &&
-                <div className='button-container'>
-                    <button type='button' className='action-button' disabled={pageNumber <= 1} onClick={() => handleNavigation(Math.max(1, pageNumber - 1))}>Previous Page</button>
-                    <button type='button' className='action-button' disabled={(pageNumber * itemsPerPage) >= saintDataService.payload.length} onClick={() => handleNavigation(Math.min(saintDataService.payload.length, pageNumber + 1))}>Next Page</button>
-                </div>
                 }
             </div>
             {saintDataService.status === 'error' && (
