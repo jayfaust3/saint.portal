@@ -37,6 +37,7 @@ const Saints: React.FC<{}> = () => {
                     <MaterialTable
                         title=''
                         icons={tableIcons}
+                        options={{actionsColumnIndex: -1}}
                         columns={[
                             {
                                 title: '',
