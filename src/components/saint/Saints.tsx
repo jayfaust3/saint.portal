@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { SvgIconComponent } from '@material-ui/icons';
@@ -14,7 +14,14 @@ import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
     const getSaintsService = useSaintsService();
-    const { saveSaintService, saveSaint } = useSaveSaintService();
+    const { saveSaint } = useSaveSaintService();
+    const [saints, setSaints] = useState<Array<Saint>>([]);
+    useEffect(
+        () => {
+            setSaints(getSaintsService.status === 'loaded' ? getSaintsService.payload.filter((saint) => saint.active) : []);
+        },
+        [getSaintsService]
+    );
 
     return (
         <>
@@ -60,7 +67,7 @@ const Saints: React.FC<{}> = () => {
                                                     </div>
                             }
                         ]}
-                        data={getSaintsService.payload.filter((saint) => saint.active)}
+                        data={saints}
                         actions={[
                             {
                                 icon: tableIcons.Edit as SvgIconComponent,
@@ -73,7 +80,7 @@ const Saints: React.FC<{}> = () => {
                                 onClick: async (event, saint) => {
                                     await saveSaint({ ...(saint as Saint), active: false });
 
-                                    getSaintsService.payload.filter((_) => _.id !== (saint as Saint).id);
+                                    setSaints([...saints].filter((_) => _.id !== (saint as Saint).id));
                                 }
                             }
                           ]}
