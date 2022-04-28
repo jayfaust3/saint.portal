@@ -1,18 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
+import { SvgIconComponent } from '@material-ui/icons';
 import Loader from '../common/Loader';
 import tableIcons from '../utils/MaterialTableIcons';
 import SaintAvatar from './SaintAvatar';
-import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import { Region } from '../../models/saint/Region';
 import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 import { Saint } from '../../models/saint/Saint';
-import { SvgIconComponent } from '@material-ui/icons';
+import useSaintsService from '../../services/saint/view/useGetSaintsService';
+import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
-    const saintDataService = useSaintsService();
+    const getSaintsService = useSaintsService();
+    const { saveSaintService, saveSaint } = useSaveSaintService();
 
     return (
         <>
@@ -25,7 +27,7 @@ const Saints: React.FC<{}> = () => {
                         </p>
                     </div>
                 </header>
-                {saintDataService.status === 'loading' && (
+                {getSaintsService.status === 'loading' && (
                     <div className='loader-container'>
                         <Loader />
                     </div>
@@ -33,11 +35,16 @@ const Saints: React.FC<{}> = () => {
                 <div className='button-container'>
                     <button type='button' className='action-button' onClick={() => navigate('/saint')}>Add</button>
                 </div>
-                {saintDataService.status === 'loaded' &&
+                {getSaintsService.status === 'loaded' &&
                     <MaterialTable
                         title=''
                         icons={tableIcons}
                         options={{actionsColumnIndex: -1}}
+                        localization={{
+                            header: {
+                              actions: ''
+                            }
+                          }}
                         columns={[
                             {
                                 title: '',
@@ -53,18 +60,27 @@ const Saints: React.FC<{}> = () => {
                                                     </div>
                             }
                         ]}
-                        data={saintDataService.payload}
+                        data={getSaintsService.payload.filter((saint) => saint.active)}
                         actions={[
                             {
                                 icon: tableIcons.Edit as SvgIconComponent,
                                 tooltip: 'Edit',
                                 onClick: (event, saint) => navigate(`/saint/${(saint as Saint).id}`)
+                            },
+                            {
+                                icon: tableIcons.Delete as SvgIconComponent,
+                                tooltip: 'Delete',
+                                onClick: async (event, saint) => {
+                                    await saveSaint({ ...(saint as Saint), active: false });
+
+                                    getSaintsService.payload.filter((_) => _.id !== (saint as Saint).id);
+                                }
                             }
                           ]}
                     />
                 }
             </div>
-            {saintDataService.status === 'error' && (
+            {getSaintsService.status === 'error' && (
                 <div>Error, unable to retrieve the Saints.</div>
             )}
         </>
