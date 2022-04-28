@@ -154,12 +154,13 @@ img {
   width: 18px;
   text-align: left;
 }
-.image-container {
+.avatar-container {
   object-fit: scale-down;
   width: 80px;
   height: auto;
   margin-right: auto;
   position: sticky;
+  border-radius: 50%;
 }
 .button-container {
   align-items: end;

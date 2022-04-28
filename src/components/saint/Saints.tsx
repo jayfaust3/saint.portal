@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import Loader from '../common/Loader';
@@ -8,7 +8,7 @@ import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import { Region } from '../../models/saint/Region';
 import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 import { Saint } from '../../models/saint/Saint';
-import { SessionStorageService } from '../../services/browser/SessionStorageService';
+import { SvgIconComponent } from '@material-ui/icons';
 
 const Saints: React.FC<{}> = () => {
     const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Saints: React.FC<{}> = () => {
                         columns={[
                             {
                                 title: '',
-                                render: (saint) =>  <div className='image-container'>
+                                render: (saint) =>  <div className='avatar-container'>
                                                         <SaintAvatar { ...saint }/>
                                                     </div>
                             },
@@ -53,6 +53,13 @@ const Saints: React.FC<{}> = () => {
                             }
                         ]}
                         data={saintDataService.payload}
+                        actions={[
+                            {
+                                icon: tableIcons.Edit as SvgIconComponent,
+                                tooltip: 'Edit',
+                                onClick: (event, saint) => navigate(`/saint/${(saint as Saint).id}`)
+                            }
+                          ]}
                     />
                 }
             </div>
