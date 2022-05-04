@@ -75,7 +75,7 @@ const Saints: React.FC<{}> = () => {
                                 },
                                 {
                                     title: '',
-                                    render: (saint) =>  <div>
+                                    render: (saint) =>  <div className='summary-column'>
                                                             <p>{saint.notes ?? ''}</p>
                                                         </div>
                                 }

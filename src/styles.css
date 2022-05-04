@@ -34,12 +34,6 @@ h1 {
   font-size: 36px;
   font-weight: bold;
 }
-/* td:first-child {
-  width: 100px;
-}
-td:nth-child(2) {
-  width: 300px;
-} */
 .slogan {
   max-width: 520px;
   margin: 10px auto 0;
@@ -119,6 +113,10 @@ td:nth-child(2) {
 .form-title {
   font-size: 20px;
   text-align: center;
+}
+.summary-column {
+  inline-size: 500px; 
+  overflow: hidden;
 }
 label {
   display: block;
