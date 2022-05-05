@@ -13,12 +13,13 @@ export default function AppRouter() {
 
     const now: number = new Date().getTime();
 
-    const isLoggedIn = userData?.tokenObj?.expires_at ?? now > now;
+    const isLoggedIn: boolean = (userData?.tokenObj?.expires_at ?? now) > now;
 
     return (
         <div>             
             <Routes>
               <Route path='/' element={isLoggedIn ? <Saints /> : <SignIn />} />
+              <Route path='/signin' element={<SignIn />} /> 
               <Route path='/saints' element={<Saints />} /> 
               <Route path='/saint' element={<Saint />} />                      
               <Route path='/saint/:saintId' element={<Saint />} />
