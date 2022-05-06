@@ -1,5 +1,5 @@
 export enum SessionStorageKey {
-    USER_DATA
+    USER_DATA = 'USER_DATA'
 }
 
 export class SessionStorageService {
