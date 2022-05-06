@@ -5,7 +5,7 @@ import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';
 import { File } from '../../../models/file/File';
 import { FileService } from '../../file/crud/FileService';
-import { Service } from '../../../models/Service';
+import { Service } from '../../Service';
 
 const useGetSaintService = (
     initialSaintState: Saint,

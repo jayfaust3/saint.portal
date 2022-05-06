@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';
-import { Service } from '../../../models/Service';
+import { Service } from '../../Service';
 
 const useGetSaintsService = () => {
     const [result, setResult] = useState<Service<Array<Saint>>>({

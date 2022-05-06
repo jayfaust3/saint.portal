@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
-import { SessionStorageService } from '../../services/browser/SessionStorageService';
+import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 
 const SignIn: FC<{}> = () => {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const SignIn: FC<{}> = () => {
                 buttonText='Login'
                 onSuccess={(response) => {
                         console.log('RESPONSE FROM GOOGLE:', JSON.stringify(response))
-                        cacheService.setItem('USER_DATA', (response as GoogleLoginResponse))
+                        cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse))
                         navigate('/saints');
                     }
                 }

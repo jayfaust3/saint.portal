@@ -3,7 +3,7 @@ import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { File } from '../../../models/file/File';
 import { FileService } from '../../file/crud/FileService';
-import { Service } from '../../../models/Service';
+import { Service } from '../../Service';
 
 const useGetImageFromSaintService = (saint: Saint) => {
     const [result, setResult] = useState<Service<string | undefined>>({
