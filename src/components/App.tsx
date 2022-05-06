@@ -6,8 +6,8 @@ import Header from './common/Header';
 const App: FC<{}> = () =>  {
   return (
     <div className="App">
-      <Header/>
       <div className="container">
+        <Header/>
         <Router>                                      
           <AppRouter />
         </Router>
