@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
+import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 

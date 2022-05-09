@@ -20,4 +20,9 @@ export class SessionStorageService {
 
         return JSON.parse(itemJson) as TItem;
     }
+
+    public removeItem(key: SessionStorageKey): void {
+        window.sessionStorage.removeItem(key as unknown as string);
+    }
+
 }
