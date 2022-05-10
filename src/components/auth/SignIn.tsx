@@ -14,8 +14,7 @@ const SignIn: FC<{}> = () => {
                 clientId='593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com'
                 buttonText='Login'
                 onSuccess={(response) => {
-                        console.log('RESPONSE FROM GOOGLE:', JSON.stringify(response))
-                        cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse))
+                        cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
                         navigate('/saints');
                     }
                 }

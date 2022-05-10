@@ -1,19 +1,30 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 // import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
-// import { GoogleLogout } from 'react-google-login';
-import { useNavigate } from 'react-router-dom';
+import GoogleLogin, { GoogleLoginResponse, GoogleLogout } from 'react-google-login';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 
 const Header: FC<{}> = () => {
-    const navigate = useNavigate();
-
     const cacheService = new SessionStorageService();
 
+    let _isLoggedIn: boolean = false;
+
+    const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
+
+    if (userData) {
+      const now: number = new Date().getTime();
+
+      _isLoggedIn = userData.tokenObj.expires_at > now;
+    }
+
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(_isLoggedIn);
+
+    const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com';
+    
     return (
         <AppBar position="static">
         <Toolbar>
@@ -30,32 +41,34 @@ const Header: FC<{}> = () => {
              Icon wrapped in Icon */}
             {/* <MenuIcon /> */}
           </IconButton>
-          {/* The Typography component applies 
-           default font weights and sizes */}
-  
-          <Typography variant="h6" 
-            component="div" sx={{ flexGrow: 1 }}>
-            Saints
-          </Typography>
-          <button
-            type='button'
-            className='cancel-button'
-            onClick={() => {
-              cacheService.removeItem(SessionStorageKey.USER_DATA);
-              navigate('/signin');
-            }}>
-            Log Out
-          </button>
-          {/* <GoogleLogout
-            clientId='593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com'
+          {
+          !isLoggedIn ?
+          <GoogleLogin
+            clientId={googleClientId}
+            buttonText='Login'
+            onSuccess={(response) => {
+                cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
+                setIsLoggedIn(true);
+              }
+            }
+            onFailure={(response) => console.error('UNABLE TO LOGIN!!!', JSON.stringify(response))}
+          />
+          :
+          <GoogleLogout
+            clientId={googleClientId}
             buttonText='Logout'
             onLogoutSuccess={() => {
-                // cacheService.removeItem(SessionStorageKey.USER_DATA);
-                navigate('/signin');
+              cacheService.removeItem(SessionStorageKey.USER_DATA);
+              setIsLoggedIn(false);
               }
             }
             onFailure={() => console.error('UNABLE TO LOGOUT!!!')}
-        /> */}
+          />
+          }
+          <Typography variant="h6" 
+            component="div" sx={{ flexGrow: 1 }}>
+            {/* <Text goes here> */}
+          </Typography>
         </Toolbar>
       </AppBar>
     );
