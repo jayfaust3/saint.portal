@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { FileValidated } from "@dropzone-ui/react";
+import { FileValidated } from '@dropzone-ui/react';
+import { UserAuth } from '../../../models/security/UserContext';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';
@@ -8,6 +9,7 @@ import { FileService } from '../../file/crud/FileService';
 import { Service } from '../../Service';
 
 const useGetSaintService = (
+    auth: UserAuth,
     initialSaintState: Saint,
     assignSaintCallback: (saint: Saint) => void,
     assignFileCallback: (files: Array<FileValidated>) => void,
@@ -22,7 +24,7 @@ const useGetSaintService = (
             setResult({ status: 'loading' });
 
             if (saintId) {
-                const saintService = new SaintService();
+                const saintService = new SaintService(auth);
 
                 const getData = async () => {
                     const saintAPIResponse: APIResponse<Saint> = await saintService.get(saintId);

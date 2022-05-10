@@ -20,7 +20,7 @@ const Saint: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) => 
     const [formValid, setFormValid] = useState<boolean>(create);
     const [saint, setSaint] = useState<Saint>({ id: saintId, active: true, hasAvatar: false });
     const [files, setFiles] = useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
+    const getSaintService: Service<{}> = useGetSaintService(userContext.auth, saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService(userContext.auth);
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     useEffect(

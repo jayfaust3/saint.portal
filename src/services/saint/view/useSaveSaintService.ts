@@ -27,7 +27,7 @@ const useSaveSaintService = (auth: UserAuth) => {
         try {
             validateSaint(saint);
 
-            const saintService = new SaintService();
+            const saintService = new SaintService(auth);
 
             if (saint.id) {
                 await saintService.put(saint.id, saint);

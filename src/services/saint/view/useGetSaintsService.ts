@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
+import { UserAuth } from '../../../models/security/UserContext';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';
 import { Service } from '../../Service';
 
-const useGetSaintsService = () => {
+const useGetSaintsService = (auth: UserAuth) => {
     const [result, setResult] = useState<Service<Array<Saint>>>({
         status: 'loading'
     });
 
-    const saintService = new SaintService();
+    const saintService = new SaintService(auth);
 
     useEffect(() => {
         const getData = async () => {

@@ -14,7 +14,7 @@ import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
 const Saints: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) => {
     const navigate = useNavigate();
-    const getSaintsService = useSaintsService();
+    const getSaintsService = useSaintsService(userContext.auth);
     const { saveSaint } = useSaveSaintService(userContext.auth);
     const [saints, setSaints] = useState<Array<Saint>>([]);
     useEffect(
