@@ -1,5 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-const Loader: React.FC<{}> = () => <div className="loader" />;
+const Loader: FC<unknown> = () => <div className="loader" />;
 
 export default Loader;

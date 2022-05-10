@@ -3,7 +3,7 @@ import { BrowserRouter as Router} from 'react-router-dom';
 import AppRouter from './AppRouter';
 import Header from './common/Header';
 
-const App: FC<{}> = () =>  {
+const App: FC<unknown> = () =>  {
   return (
     <div className="App">
       <div className="container">

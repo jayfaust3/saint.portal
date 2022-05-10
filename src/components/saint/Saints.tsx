@@ -11,7 +11,7 @@ import { Saint } from '../../models/saint/Saint';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
-const Saints: FC<{}> = () => {
+const Saints: FC<unknown> = () => {
     const navigate = useNavigate();
     const getSaintsService = useSaintsService();
     const { saveSaint } = useSaveSaintService();

@@ -12,7 +12,7 @@ import useGetSaintService from '../../services/saint/view/useGetSaintService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
-const Saint: FC<{}> = () => {
+const Saint: FC<unknown> = () => {
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;

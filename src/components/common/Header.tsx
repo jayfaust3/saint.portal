@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import GoogleLogin, { GoogleLoginResponse, GoogleLogout } from 'react-google-login';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 
-const Header: FC<{}> = () => {
+const Header: FC<unknown> = () => {
     const cacheService = new SessionStorageService();
 
     let _isLoggedIn: boolean = false;
