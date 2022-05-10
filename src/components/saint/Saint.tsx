@@ -22,7 +22,12 @@ const Saint: FC<{}> = () => {
     const getSaintService: Service<{}> = useGetSaintService(saint, setSaint, setFiles, saintId);
     const { saveSaintService, saveSaint } = useSaveSaintService();
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
-    useEffect(() => setFormValid(!(!saint.name || !saint.region || !saint.yearOfDeath || !saint.region || (saint.yearOfBirth! > saint.yearOfDeath))), [saint]); 
+    useEffect(
+        () => setFormValid(
+            !(!saint.name || !saint.region || !saint.yearOfDeath || !saint.region || (saint.yearOfBirth! > saint.yearOfDeath))
+        ),
+        [saint]
+    ); 
     useEffect(
         () => {
             const hasAvatar: boolean = files.length > 0;
