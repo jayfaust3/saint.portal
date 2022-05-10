@@ -3,8 +3,8 @@ import Loader from '../common/Loader';
 import { Saint } from '../../models/saint/Saint';
 import useGetImageFromSaintService from '../../services/saint/view/useGetImageFromSaintService';
 
-const SaintAvatar: FC<Saint> = (props: PropsWithChildren<Saint>) => {
-    const imageService = useGetImageFromSaintService(props);
+const SaintAvatar: FC<Saint> = (saint: PropsWithChildren<Saint>) => {
+    const imageService = useGetImageFromSaintService(saint);
     
     return (
         <>

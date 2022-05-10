@@ -12,7 +12,7 @@ import { UserContext } from '../../models/security/UserContext';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
-const Saints: FC<UserContext> = (props: PropsWithChildren<UserContext>) => {
+const Saints: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) => {
     const navigate = useNavigate();
     const getSaintsService = useSaintsService();
     const { saveSaint } = useSaveSaintService();
