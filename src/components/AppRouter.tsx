@@ -29,9 +29,9 @@ export default function AppRouter() {
     return (
         <div>             
             <Routes>
-              <Route path='/' element={<Saints { ...userContext }/>} /> 
-              <Route path='/saint' element={<Saint { ...userContext }/>} />                      
-              <Route path='/saint/:saintId' element={<Saint { ...userContext }/>} />
+              <Route path='/' element={<Saints userContext={userContext}/>} /> 
+              <Route path='/saint' element={<Saint userContext={userContext}/>} />                      
+              <Route path='/saint/:saintId' element={<Saint userContext={userContext}/>} />
             </Routes>               
         </div>
     );

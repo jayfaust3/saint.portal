@@ -13,15 +13,15 @@ import useGetSaintService from '../../services/saint/view/useGetSaintService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
-const Saint: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) => {
+const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;
     const [formValid, setFormValid] = useState<boolean>(create);
     const [saint, setSaint] = useState<Saint>({ id: saintId, active: true, hasAvatar: false });
     const [files, setFiles] = useState<Array<FileValidated>>([]);
-    const getSaintService: Service<{}> = useGetSaintService(userContext.auth, saint, setSaint, setFiles, saintId);
-    const { saveSaintService, saveSaint } = useSaveSaintService(userContext.auth);
+    const getSaintService: Service<{}> = useGetSaintService(props.userContext.auth, saint, setSaint, setFiles, saintId);
+    const { saveSaintService, saveSaint } = useSaveSaintService(props.userContext.auth);
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     useEffect(
         () => setFormValid(

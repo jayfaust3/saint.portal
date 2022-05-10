@@ -49,6 +49,7 @@ const Header: FC<unknown> = () => {
             onSuccess={(response) => {
                 cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
                 setIsLoggedIn(true);
+                window.location.href = '/';
               }
             }
             onFailure={(response) => console.error('UNABLE TO LOGIN!!!', JSON.stringify(response))}
@@ -58,8 +59,9 @@ const Header: FC<unknown> = () => {
             clientId={googleClientId}
             buttonText='Logout'
             onLogoutSuccess={() => {
-              cacheService.removeItem(SessionStorageKey.USER_DATA);
-              setIsLoggedIn(false);
+                cacheService.removeItem(SessionStorageKey.USER_DATA);
+                setIsLoggedIn(false);
+                window.location.href = '/';
               }
             }
             onFailure={() => console.error('UNABLE TO LOGOUT!!!')}

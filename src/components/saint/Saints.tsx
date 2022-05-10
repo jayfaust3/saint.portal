@@ -12,10 +12,10 @@ import { UserContext } from '../../models/security/UserContext';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
-const Saints: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) => {
+const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const navigate = useNavigate();
-    const getSaintsService = useSaintsService(userContext.auth);
-    const { saveSaint } = useSaveSaintService(userContext.auth);
+    const getSaintsService = useSaintsService(props.userContext.auth);
+    const { saveSaint } = useSaveSaintService(props.userContext.auth);
     const [saints, setSaints] = useState<Array<Saint>>([]);
     useEffect(
         () => {
@@ -68,7 +68,7 @@ const Saints: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) =>
                                     title: '',
                                     render: (saint) =>  <div>
                                                             <div className='avatar-container'>
-                                                                <SaintAvatar saint={saint} context={userContext}/>
+                                                                <SaintAvatar data={saint} userContext={props.userContext}/>
                                                             </div>
                                                             <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
                                                             <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>
