@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { SvgIconComponent } from '@material-ui/icons';
@@ -11,7 +11,7 @@ import { Saint } from '../../models/saint/Saint';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
-const Saints: React.FC<{}> = () => {
+const Saints: FC<{}> = () => {
     const navigate = useNavigate();
     const getSaintsService = useSaintsService();
     const { saveSaint } = useSaveSaintService();
