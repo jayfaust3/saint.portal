@@ -50,6 +50,7 @@ const Saints: React.FC<{}> = () => {
                                 actionsColumnIndex: -1,
                                 search: false,
                                 showTitle: false,
+                                toolbar: false,
                                 pageSize: 25
                             }
                         }
