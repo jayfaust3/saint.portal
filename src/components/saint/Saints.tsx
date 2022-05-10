@@ -13,6 +13,7 @@ import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
 const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
+    const isLoggedIn: boolean = Boolean(props.userContext.userData);
     const navigate = useNavigate();
     const getSaintsService = useSaintsService(props.userContext.auth);
     const { saveSaint } = useSaveSaintService(props.userContext.auth);
@@ -86,14 +87,23 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                         data={saints.filter((saint) => saint.active)}
                         actions={
                             [
-                                {
-                                    icon: tableIcons.Edit as SvgIconComponent,
-                                    tooltip: 'Edit',
-                                    onClick: (event, saint) => navigate(`/saint/${(saint as Saint).id}`)
-                                },
+                                (
+                                    isLoggedIn ?
+                                    {
+                                        icon: tableIcons.Edit as SvgIconComponent,
+                                        tooltip: 'Edit',
+                                        onClick: (event, saint) => navigate(`/saint/${(saint as Saint).id}`)
+                                    } :
+                                    {
+                                        icon: tableIcons.Search as SvgIconComponent,
+                                        tooltip: 'View',
+                                        onClick: (event, saint) => navigate(`/saint/${(saint as Saint).id}`)
+                                    }
+                                ),
                                 {
                                     icon: tableIcons.Delete as SvgIconComponent,
-                                    tooltip: 'Delete',
+                                    disabled: !isLoggedIn,
+                                    tooltip: isLoggedIn ? 'Delete' : 'Login to Delete',
                                     onClick: async (event, data) => {
                                         const saint = data as Saint;
 

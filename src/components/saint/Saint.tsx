@@ -14,6 +14,7 @@ import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
 const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
+    const isLoggedIn: boolean = Boolean(props.userContext.userData);
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;
@@ -91,7 +92,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
     const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (formValid) {
+        if (formValid && isLoggedIn) {
             await saveSaint(saint, files?.pop());
 
             navigateToIndex();
@@ -178,8 +179,12 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                     </Dropzone>)}
                 </div>
                 <div className='button-container'>
-                    <button type='button' className='cancel-button' onClick={navigateToIndex}>Cancel</button>
-                    <button type='submit' className='action-button' disabled={!formValid}>Save</button>
+                    <button type='button' className='cancel-button' onClick={navigateToIndex}>
+                        { isLoggedIn ? 'Cancel' : 'Done' }
+                    </button>
+                    <button type='submit' className='action-button' disabled={!formValid || !isLoggedIn} hidden={!isLoggedIn}>
+                        Save
+                    </button>
                 </div>
             </form>)}
 
