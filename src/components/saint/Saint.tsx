@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, PropsWithChildren, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
@@ -8,11 +8,12 @@ import { Service } from '../../services/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
 import { DropdownModel } from '../../models/component/DropdownModel';
+import { UserContext } from '../../models/security/UserContext';
 import useGetSaintService from '../../services/saint/view/useGetSaintService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
-const Saint: FC<unknown> = () => {
+const Saint: FC<UserContext> = (props: PropsWithChildren<UserContext>) => {
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;

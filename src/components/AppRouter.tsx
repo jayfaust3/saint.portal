@@ -1,15 +1,38 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { GoogleLoginResponse } from 'react-google-login';
+import { SessionStorageKey, SessionStorageService } from '../services/browser/SessionStorageService';
+import { UserContext } from '../models/security/UserContext';
 import Saints from './saint/Saints';
 import Saint from './saint/Saint';
 
 export default function AppRouter() {
+    let userContext: UserContext = {
+        auth: {
+            id_token: '',
+            expires_in: 3599,
+            expires_at: new Date().getTime() + (60 * 60 * 1000)
+        }
+    };
+
+    const cacheService = new SessionStorageService();
+
+    const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
+
+    if (userData) {
+        userContext = {
+            auth: userData.tokenObj,
+            userData: userData.profileObj
+        };
+    }
+
+
     return (
         <div>             
             <Routes>
-              <Route path='/' element={<Saints />} /> 
-              <Route path='/saint' element={<Saint />} />                      
-              <Route path='/saint/:saintId' element={<Saint />} />
+              <Route path='/' element={<Saints { ...userContext }/>} /> 
+              <Route path='/saint' element={<Saint { ...userContext }/>} />                      
+              <Route path='/saint/:saintId' element={<Saint { ...userContext }/>} />
             </Routes>               
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { SvgIconComponent } from '@material-ui/icons';
@@ -8,10 +8,11 @@ import SaintAvatar from './SaintAvatar';
 import { Region } from '../../models/saint/Region';
 import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 import { Saint } from '../../models/saint/Saint';
+import { UserContext } from '../../models/security/UserContext';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
-const Saints: FC<unknown> = () => {
+const Saints: FC<UserContext> = (props: PropsWithChildren<UserContext>) => {
     const navigate = useNavigate();
     const getSaintsService = useSaintsService();
     const { saveSaint } = useSaveSaintService();
