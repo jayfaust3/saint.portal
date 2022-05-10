@@ -68,7 +68,7 @@ const Saints: FC<UserContext> = (userContext: PropsWithChildren<UserContext>) =>
                                     title: '',
                                     render: (saint) =>  <div>
                                                             <div className='avatar-container'>
-                                                                <SaintAvatar { ...saint }/>
+                                                                <SaintAvatar saint={saint} context={userContext}/>
                                                             </div>
                                                             <h5>{`${saint.name} of ${enumValueToFriendlyName(Region, saint.region! as unknown as object)}`}</h5>
                                                             <p>{`${saint.yearOfBirth} - ${saint.yearOfDeath}${saint.martyred ? ' (Martyred)' : ''}`}</p>

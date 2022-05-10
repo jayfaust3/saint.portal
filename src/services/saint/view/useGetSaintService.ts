@@ -34,7 +34,7 @@ const useGetSaintService = (
                     assignSaintCallback({  ...initialSaintState, ...saintData});
 
                     if (saintData.hasAvatar) {
-                        const fileService = new FileService();
+                        const fileService = new FileService(auth);
 
                         const fileAPIResponse: APIResponse<File> = await fileService.getFile(
                             'saint-bucket',

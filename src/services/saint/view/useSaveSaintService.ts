@@ -36,7 +36,7 @@ const useSaveSaintService = (auth: UserAuth) => {
             }
 
             if(file) {
-                const fileService = new FileService();
+                const fileService = new FileService(auth);
     
                 const fileContent: string = Buffer.from(
                     await file!.file.arrayBuffer()
