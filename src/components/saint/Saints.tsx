@@ -98,8 +98,6 @@ const Saints: React.FC<{}> = () => {
                                         saint.active = false;
 
                                         await saveSaint(saint);
-
-                                        // setSaints([...saints].filter((_) => _.id !== saint.id));
                                     }
                                 }
                             ]
