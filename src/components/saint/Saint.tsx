@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Select, { ActionMeta, SingleValue } from 'react-select';
 import { Dropzone, FileItem, FileValidated } from '@dropzone-ui/react';
 import Loader from '../common/Loader';
+import SaintAvatar from './SaintAvatar';
 import { Service } from '../../services/Service';
 import { Saint } from '../../models/saint/Saint';
 import { Region } from '../../models/saint/Region';
@@ -12,6 +13,7 @@ import { UserContext } from '../../models/security/UserContext';
 import useGetSaintService from '../../services/saint/view/useGetSaintService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
+import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 
 const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
@@ -140,12 +142,22 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                 </div>
                 <div>
                     <label className='required'>Region</label>
-                    <Select
-                        options={regions}
-                        name='region'
-                        onChange={handleRegionChange}
-                        value={[...regions].filter(x => x.value === saint.region).pop()}
-                    />
+                    {
+                        isLoggedIn ?
+                        <Select
+                            options={regions}
+                            name='region'
+                            onChange={handleRegionChange}
+                            value={[...regions].filter(x => x.value === saint.region).pop()}
+                        /> :
+                        <input
+                            type='text'
+                            name='region'
+                            value={enumValueToFriendlyName(Region, saint.region! as unknown as object)}
+                            disabled={!isLoggedIn}
+                            required
+                        />
+                    }
                 </div>
                 <div>
                     <label>Martyred?</label>
@@ -161,7 +173,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                 <div>
                     <label>Notes</label>
                     <textarea
-                        rows={5}
+                        rows={10}
                         cols={120}
                         name='notes'
                         value={saint.notes || ''}
@@ -171,19 +183,26 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                 </div>
                 <div>
                     <label>Avatar</label>
-                   {getSaintService.status === 'loaded' &&
-                   (<Dropzone 
-                        onChange={handleAvatarChange}
-                        value={files}
-                        maxFiles={1}
-                        accept={'image/jpeg, image/jpg'}
-                        behaviour={'replace'}
-                    >
-                        {files.map((file) => (
-                            <FileItem {...file} preview />
-                        ))}
-                    </Dropzone>)}
+                    {
+                        isLoggedIn && getSaintService.status === 'loaded' ?
+                        <Dropzone 
+                            onChange={handleAvatarChange}
+                            value={files}
+                            maxFiles={1}
+                            accept={'image/jpeg, image/jpg'}
+                            behaviour={'replace'}
+                        >
+                            {files.map((file) => (
+                                <FileItem {...file} preview />
+                            ))}
+                        </Dropzone>
+                            :
+                        <div className='avatar-container'>
+                            <SaintAvatar data={saint} userContext={props.userContext}/>
+                        </div>
+                    }
                 </div>
+                   
                 <div className='button-container'>
                     <button type='button' className='cancel-button' onClick={navigateToIndex}>
                         { isLoggedIn ? 'Cancel' : 'Done' }
