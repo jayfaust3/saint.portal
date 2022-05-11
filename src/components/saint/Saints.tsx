@@ -13,7 +13,7 @@ import useSaintsService from '../../services/saint/view/useGetSaintsService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 
 const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
-    const isLoggedIn: boolean = Boolean(props.userContext.userData);
+    const isLoggedIn: boolean = props.userContext.isLoggedIn;
     const navigate = useNavigate();
     const getSaintsService = useSaintsService(props.userContext.auth);
     const { saveSaint } = useSaveSaintService(props.userContext.auth);
@@ -42,7 +42,9 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                     </div>
                 )}
                 <div className='button-container'>
-                    <button type='button' className='action-button' onClick={() => navigate('/saint')}>Add</button>
+                    <button type='button' className='action-button' disabled={!isLoggedIn} onClick={() => navigate('/saint')}>
+                        Add
+                    </button>
                 </div>
                 {getSaintsService.status === 'loaded' &&
                     <MaterialTable

@@ -8,6 +8,7 @@ import Saint from './saint/Saint';
 
 export default function AppRouter() {
     let userContext: UserContext = {
+        isLoggedIn: false,
         auth: {
             id_token: '',
             expires_in: 3599,
@@ -21,6 +22,7 @@ export default function AppRouter() {
 
     if (userData) {
         userContext = {
+            isLoggedIn: true,
             auth: userData.tokenObj,
             userData: userData.profileObj
         };

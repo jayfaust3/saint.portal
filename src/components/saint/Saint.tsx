@@ -14,7 +14,7 @@ import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
 import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
 
 const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
-    const isLoggedIn: boolean = Boolean(props.userContext.userData);
+    const isLoggedIn: boolean = props.userContext.isLoggedIn;
     const navigate = useNavigate();
     const { saintId } = useParams();
     const create: boolean = !saintId;

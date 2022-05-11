@@ -8,6 +8,7 @@ export interface UserContext {
         givenName: string;
         familyName: string;
     };
+    isLoggedIn: boolean;
 }
 
 export interface UserAuth {
