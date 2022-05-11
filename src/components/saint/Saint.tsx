@@ -101,7 +101,8 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
 
     return (
         <div className='card'>
-            <p className='form-title'>Who's this Saint?</p>
+            <h3 className='form-title'>Who's this Saint?</h3>
+            <p>{isLoggedIn ? '' : 'Login to make changes'}</p>
             {getSaintService.status === 'loaded' &&
             (<form onSubmit={handleFormSubmit}>
                 <div>
@@ -110,6 +111,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                         type='text'
                         name='name'
                         value={saint.name || ''}
+                        disabled={!isLoggedIn}
                         onChange={handleNameChange}
                         required
                     />
@@ -120,6 +122,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                         type='number'
                         name='yearOfBirth'
                         value={saint.yearOfBirth || 0}
+                        disabled={!isLoggedIn}
                         onChange={handleYearChange}
                         required
                     />
@@ -130,6 +133,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                         type='number'
                         name='yearOfDeath'
                         value={saint.yearOfDeath || 0}
+                        disabled={!isLoggedIn}
                         onChange={handleYearChange}
                         required
                     />
@@ -150,6 +154,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                         type='checkbox'
                         name='martyred'
                         checked={saint.martyred}
+                        disabled={!isLoggedIn}
                         onChange={handleMartyredChange}
                     />
                 </div>
@@ -160,6 +165,7 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
                         cols={120}
                         name='notes'
                         value={saint.notes || ''}
+                        disabled={!isLoggedIn}
                         onChange={handleNotesChange}>
                     </textarea>
                 </div>

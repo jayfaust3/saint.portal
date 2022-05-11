@@ -42,7 +42,7 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                     </div>
                 )}
                 <div className='button-container'>
-                    <button type='button' className='action-button' disabled={!isLoggedIn} onClick={() => navigate('/saint')}>
+                    <button title={isLoggedIn ? 'Add a new saint' : 'Login to add a new saint'} type='button' className='action-button' disabled={!isLoggedIn} onClick={() => navigate('/saint')}>
                         Add
                     </button>
                 </div>
