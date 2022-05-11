@@ -26,7 +26,7 @@ const Header: FC<unknown> = () => {
     const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com';
     
     return (
-        <AppBar position="static">
+        <AppBar position='fixed'>
         <Toolbar>
           {/*Inside the IconButton, we 
            can render various icons*/}
