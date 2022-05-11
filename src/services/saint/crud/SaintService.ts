@@ -3,6 +3,7 @@ import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 
 export class SaintService {
+    private readonly _saintAPIBaseUrl: string = '/api/saints';
     private readonly _headers: Headers;
 
     constructor(auth: UserAuth) {
@@ -16,7 +17,7 @@ export class SaintService {
 
     public async getAll(): Promise<APIResponse<Array<Saint>>> {
         const response: Response = await fetch(
-            '/saints',
+            this._saintAPIBaseUrl,
             {
                 method: 'GET',
                 headers:  this._headers
@@ -28,7 +29,7 @@ export class SaintService {
 
     public async get(id: string): Promise<APIResponse<Saint>> {
         const response: Response = await fetch(
-            `/saints/${id}`,
+            `${this._saintAPIBaseUrl}/${id}`,
             {
                 method: 'GET',
                 headers: this._headers
@@ -40,7 +41,7 @@ export class SaintService {
 
     public async post(payload: Saint): Promise<APIResponse<Saint>> {
         const response: Response = await fetch(
-            '/saints',
+            this._saintAPIBaseUrl,
             {
                 method: 'POST',
                 headers: this._headers,
@@ -53,7 +54,7 @@ export class SaintService {
 
     public async put(id: string, payload: Saint): Promise<APIResponse<Saint>> {
         const response: Response = await fetch(
-            `/saints/${id}`,
+            `${this._saintAPIBaseUrl}/${id}`,
             {
                 method: 'PUT',
                 headers: this._headers,

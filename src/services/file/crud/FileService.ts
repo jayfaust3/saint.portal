@@ -3,6 +3,7 @@ import { APIResponse } from '../../../models/api/APIResponse';
 import { File } from '../../../models/file/File';
 
 export class FileService {
+    private readonly _fileAPIBaseUrl: string = '/api/files';
     private readonly _headers: Headers;
 
     constructor(auth: UserAuth) {
@@ -16,7 +17,7 @@ export class FileService {
 
     public async postFile(file: File): Promise<APIResponse<File>> {
         const responseBuffer: Response  = await fetch(
-            '/files', 
+            this._fileAPIBaseUrl, 
             { 
                 method: 'POST', 
                 headers: this._headers,
@@ -31,7 +32,7 @@ export class FileService {
 
     public async getFile(bucketName: string, directory: string, name: string, contentType: string): Promise<APIResponse<File>> {
         const responseBuffer: Response  = await fetch(
-            `/files?bucketName=${bucketName}&directory=${directory}&name=${name}&contentType=${contentType.replace('/', '|')}`, 
+            `${this._fileAPIBaseUrl}?bucketName=${bucketName}&directory=${directory}&name=${name}&contentType=${contentType.replace('/', '|')}`, 
             { 
                 method: 'GET', 
                 headers: this._headers,
