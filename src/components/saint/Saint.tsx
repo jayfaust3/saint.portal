@@ -12,8 +12,7 @@ import { DropdownModel } from '../../models/component/DropdownModel';
 import { UserContext } from '../../models/security/UserContext';
 import useGetSaintService from '../../services/saint/view/useGetSaintService';
 import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
-import { enumToDropDownModelArray } from '../../utilities/enumUtilities';
-import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
+import { enumToDropDownModelArray, enumValueToFriendlyName } from '../../utilities/enumUtilities';
 
 const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
