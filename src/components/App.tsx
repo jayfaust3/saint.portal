@@ -10,9 +10,9 @@ const App: FC<unknown> = () =>  {
     let userContext: UserContext = {
         isLoggedIn: false,
         auth: {
-        id_token: '',
-        expires_in: 3599,
-        expires_at: new Date().getTime() + (60 * 60 * 1000)
+            id_token: '',
+            expires_in: 3599,
+            expires_at: new Date().getTime() + (60 * 60 * 1000)
         }
     };
 
