@@ -21,6 +21,10 @@ const Header: FC<unknown> = () => {
       _isLoggedIn = userData.tokenObj.expires_at > now;
     }
 
+    if (!_isLoggedIn) {
+      cacheService.removeItem(SessionStorageKey.USER_DATA);
+    }
+
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(_isLoggedIn);
 
     const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com';
