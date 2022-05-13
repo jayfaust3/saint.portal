@@ -27,6 +27,7 @@ const App: FC<unknown> = () =>  {
             userData: userData.profileObj
         };
     }
+
     return (
         <div className="App">
             <div className="container">
