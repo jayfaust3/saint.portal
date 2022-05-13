@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "webpack -p",
-    "start": "webpack && webpack-dev-server --host localhost --port 4444",
+    "start": "webpack && webpack-dev-server",
     "dev": "webpack-dev-server",
     "production": "webpack -p"
   },
