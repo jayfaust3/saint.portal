@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, PropsWithChildren, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -7,26 +7,11 @@ import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
 import GoogleLogin, { GoogleLoginResponse, GoogleLogout } from 'react-google-login';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
+import { UserContext } from '../../models/security/UserContext';
 
-const Header: FC<unknown> = () => {
+const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
+    const isLoggedIn: boolean = props.userContext.isLoggedIn;  
     const cacheService = new SessionStorageService();
-
-    let _isLoggedIn: boolean = false;
-
-    const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
-
-    if (userData) {
-      const now: number = new Date().getTime();
-
-      _isLoggedIn = userData.tokenObj.expires_at > now;
-    }
-
-    if (!_isLoggedIn) {
-      cacheService.removeItem(SessionStorageKey.USER_DATA);
-    }
-
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(_isLoggedIn);
-
     const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com';
     
     return (
@@ -53,11 +38,10 @@ const Header: FC<unknown> = () => {
               buttonText='Login'
               onSuccess={(response) => {
                   cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
-                  setIsLoggedIn(true);
                   window.location.href = '/';
                 }
               }
-            onFailure={(response) => console.error('UNABLE TO LOGIN!!!', JSON.stringify(response))}
+            onFailure={(response) => console.error('UNABLE TO LOGIN!!!', JSON.stringify(response, null, 4))}
             />
             :
             <GoogleLogout
@@ -65,7 +49,6 @@ const Header: FC<unknown> = () => {
               buttonText='Logout'
               onLogoutSuccess={() => {
                   cacheService.removeItem(SessionStorageKey.USER_DATA);
-                  setIsLoggedIn(false);
                   window.location.href = '/';
                 }
               }
