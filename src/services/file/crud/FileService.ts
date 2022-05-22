@@ -1,22 +1,17 @@
 import { UserAuth } from '../../../models/security/UserContext';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { File } from '../../../models/file/File';
+import { BaseHTTPService } from '../../http/BaseHTTPService';
 
-export class FileService {
+export class FileService extends BaseHTTPService {
     private readonly _fileAPIBaseUrl: string = '/api/files';
-    private readonly _headers: Headers;
 
     constructor(auth: UserAuth) {
-        this._headers = new Headers();
-        this._headers.append('Accept', 'application/json');
-        this._headers.append('Access-Control-Allow-Headers', '*');
-        this._headers.append('Access-Control-Allow-Origin', '*');
-        this._headers.append('Authorization', `Bearer ${auth.id_token}`);
-        this._headers.append('Content-Type', 'application/json;charset=UTF-8');
+        super(auth);
     }
 
     public async postFile(file: File): Promise<APIResponse<File>> {
-        const responseBuffer: Response  = await fetch(
+        const response: Response  = await fetch(
             this._fileAPIBaseUrl, 
             { 
                 method: 'POST', 
@@ -25,13 +20,11 @@ export class FileService {
             }
         );
 
-        const apiResponse = await responseBuffer.json() as APIResponse<File>;
-
-        return apiResponse;
+        return await this.parseResult<APIResponse<File>>(response);
     }
 
     public async getFile(bucketName: string, directory: string, name: string, contentType: string): Promise<APIResponse<File>> {
-        const responseBuffer: Response  = await fetch(
+        const response: Response  = await fetch(
             `${this._fileAPIBaseUrl}?bucketName=${bucketName}&directory=${directory}&name=${name}&contentType=${contentType.replace('/', '|')}`, 
             { 
                 method: 'GET', 
@@ -39,16 +32,6 @@ export class FileService {
             }
         );
 
-        const apiResponse = await responseBuffer.json() as APIResponse<File>;
-
-        return {
-            data: {
-                bucketName,
-                directory,
-                name,
-                contentType,
-                content: apiResponse.data.content
-            }
-        };
+        return await this.parseResult<APIResponse<File>>(response);
     }
 }
