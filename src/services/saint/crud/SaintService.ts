@@ -11,54 +11,18 @@ export class SaintService extends BaseHTTPService {
     }
 
     public async getAll(): Promise<APIResponse<Array<Saint>>> {
-        const response: Response = await fetch(
-            this._saintAPIBaseUrl,
-            {
-                method: 'GET',
-                headers:  this._headers
-            }
-        );
-
-        return await this.parseResult<APIResponse<Array<Saint>>>(response);
-
-        // return Promise.resolve({ data: [] });
+        return await this.makeRequest<APIResponse<Array<Saint>>>('GET', this._saintAPIBaseUrl);
     }
 
     public async get(id: string): Promise<APIResponse<Saint>> {
-        const response: Response = await fetch(
-            `${this._saintAPIBaseUrl}/${id}`,
-            {
-                method: 'GET',
-                headers: this._headers
-            }
-        );
-
-        return await this.parseResult<APIResponse<Saint>>(response);
+        return await this.makeRequest<APIResponse<Saint>>('GET', `${this._saintAPIBaseUrl}/${id}`);
     }
 
     public async post(payload: Saint): Promise<APIResponse<Saint>> {
-        const response: Response = await fetch(
-            this._saintAPIBaseUrl,
-            {
-                method: 'POST',
-                headers: this._headers,
-                body: JSON.stringify(payload)
-            }
-        );
-
-        return await this.parseResult<APIResponse<Saint>>(response);
+        return await this.makeRequest<APIResponse<Saint>>('POST', this._saintAPIBaseUrl, payload);
     }
 
     public async put(id: string, payload: Saint): Promise<APIResponse<Saint>> {
-        const response: Response = await fetch(
-            `${this._saintAPIBaseUrl}/${id}`,
-            {
-                method: 'PUT',
-                headers: this._headers,
-                body: JSON.stringify(payload)
-            }
-        );
-
-        return await this.parseResult<APIResponse<Saint>>(response);
+        return await this.makeRequest<APIResponse<Saint>>('PUT', `${this._saintAPIBaseUrl}/${id}`, payload);
     }
 }

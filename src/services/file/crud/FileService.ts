@@ -11,27 +11,12 @@ export class FileService extends BaseHTTPService {
     }
 
     public async postFile(file: File): Promise<APIResponse<File>> {
-        const response: Response  = await fetch(
-            this._fileAPIBaseUrl, 
-            { 
-                method: 'POST', 
-                headers: this._headers,
-                body: JSON.stringify(file)
-            }
-        );
-
-        return await this.parseResult<APIResponse<File>>(response);
+        return await this.makeRequest<APIResponse<File>>('POST', this._fileAPIBaseUrl, file);
     }
 
     public async getFile(bucketName: string, directory: string, name: string, contentType: string): Promise<APIResponse<File>> {
-        const response: Response  = await fetch(
-            `${this._fileAPIBaseUrl}?bucketName=${bucketName}&directory=${directory}&name=${name}&contentType=${contentType.replace('/', '|')}`, 
-            { 
-                method: 'GET', 
-                headers: this._headers,
-            }
-        );
-
-        return await this.parseResult<APIResponse<File>>(response);
+        const url: string = `${this._fileAPIBaseUrl}?bucketName=${bucketName}&directory=${directory}&name=${name}&contentType=${contentType.replace('/', '|')}`;
+        
+        return await this.makeRequest<APIResponse<File>>('GET', url);
     }
 }

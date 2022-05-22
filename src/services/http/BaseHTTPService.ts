@@ -13,9 +13,16 @@ export abstract class BaseHTTPService {
         this._headers.append('Content-Type', 'application/json;charset=UTF-8');
     }
 
-    protected async parseResult<TResult>(response: Response): Promise<TResult> {
-        const data = await response.json() as TResult;
+    protected async makeRequest<TResult>(httpMethod: string, url: string, payload?: unknown): Promise<TResult> {
+        const response: Response  = await fetch(
+            url, 
+            { 
+                method: httpMethod, 
+                headers: this._headers,
+                body: payload ? JSON.stringify(payload) : undefined
+            }
+        );
 
-        return data;
+        return await response.json() as TResult;
     }
 }
