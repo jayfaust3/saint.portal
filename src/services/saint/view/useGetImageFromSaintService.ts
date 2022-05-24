@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { File } from '../../../models/file/File';
-import { UserAuth } from '../../../models/security/UserContext';
+import { UserAuth } from '../../../models/security/UserAuth';
 import { FileService } from '../../file/crud/FileService';
 import { Service } from '../../Service';
 

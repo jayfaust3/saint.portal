@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FileValidated } from '@dropzone-ui/react';
-import { UserAuth } from '../../../models/security/UserContext';
+import { UserAuth } from '../../../models/security/UserAuth';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { Saint } from '../../../models/saint/Saint';
 import { SaintService } from '../crud/SaintService';

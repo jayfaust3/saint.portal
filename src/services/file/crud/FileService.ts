@@ -1,4 +1,4 @@
-import { UserAuth } from '../../../models/security/UserContext';
+import { UserAuth } from '../../../models/security/UserAuth';
 import { APIResponse } from '../../../models/api/APIResponse';
 import { File } from '../../../models/file/File';
 import { BaseHTTPService } from '../../http/BaseHTTPService';

@@ -1,4 +1,4 @@
-import { UserAuth } from '../../models/security/UserContext';
+import { UserAuth } from '../../models/security/UserAuth';
 
 export abstract class BaseHTTPService {
     protected readonly _headers: Headers;
