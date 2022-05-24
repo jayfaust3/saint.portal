@@ -23,11 +23,19 @@ const App: FC<unknown> = () =>  {
     const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
 
     if (userData) {
-        userContext = {
-            isLoggedIn: true,
-            auth: userData.tokenObj,
-            userData: userData.profileObj
-        };
+        const uglifiedUserData = userData as unknown as { xc: { expires_at: number} };
+
+        console.error('uglifiedUserData:', JSON.stringify(uglifiedUserData, null, 4))
+
+        if (now < uglifiedUserData.xc?.expires_at ?? now) {
+            userContext = {
+                isLoggedIn: true,
+                auth: userData.tokenObj,
+                userData: userData.profileObj
+            };
+        } else {
+            cacheService.removeItem(SessionStorageKey.USER_DATA);
+        }
     }
 
     return (

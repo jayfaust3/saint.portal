@@ -31,6 +31,10 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
               Icon wrapped in Icon */}
               {/* <MenuIcon /> */}
             </IconButton>
+            <Typography variant="h6" 
+              component="div" sx={{ flexGrow: 1 }}>
+              {/* <Text goes here> */}
+            </Typography>
             {
             !isLoggedIn ?
             <GoogleLogin
@@ -55,10 +59,6 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
               onFailure={() => console.error('UNABLE TO LOGOUT!!!')}
             />
             }
-            <Typography variant="h6" 
-              component="div" sx={{ flexGrow: 1 }}>
-              {/* <Text goes here> */}
-            </Typography>
           </Toolbar>
         </AppBar>
         <br></br>
