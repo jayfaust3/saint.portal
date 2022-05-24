@@ -1,5 +1,4 @@
 import { UserAuth } from '../../models/security/UserContext';
-import { APIResponse } from '../../models/api/APIResponse';
 
 export abstract class BaseHTTPService {
     protected readonly _headers: Headers;
@@ -13,12 +12,12 @@ export abstract class BaseHTTPService {
         this._headers.append('Content-Type', 'application/json;charset=UTF-8');
     }
 
-    protected async makeRequest<TResult>(httpMethod: string, url: string, payload?: unknown): Promise<TResult> {
+    protected async makeRequest<TResult>(httpMethod: string, url: string, payload?: unknown, headers?: Headers): Promise<TResult> {
         const response: Response  = await fetch(
             url, 
             { 
                 method: httpMethod, 
-                headers: this._headers,
+                headers: headers ?? this._headers,
                 body: payload ? JSON.stringify(payload) : undefined
             }
         );

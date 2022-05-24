@@ -12,6 +12,7 @@ export class SaintService extends BaseHTTPService {
 
     public async getAll(): Promise<APIResponse<Array<Saint>>> {
         return await this.makeRequest<APIResponse<Array<Saint>>>('GET', this._saintAPIBaseUrl);
+        return Promise.resolve({ data: [] });
     }
 
     public async get(id: string): Promise<APIResponse<Saint>> {
