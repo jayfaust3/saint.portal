@@ -25,8 +25,6 @@ const App: FC<unknown> = () =>  {
     if (userData) {
         const uglifiedUserData = userData as unknown as { xc: { expires_at: number} };
 
-        console.error('uglifiedUserData:', JSON.stringify(uglifiedUserData, null, 4))
-
         if (now < uglifiedUserData.xc?.expires_at ?? now) {
             userContext = {
                 isLoggedIn: true,
