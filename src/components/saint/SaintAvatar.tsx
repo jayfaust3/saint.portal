@@ -17,6 +17,9 @@ const SaintAvatar: FC<{data: Saint, userContext: UserContext }> = (props: PropsW
                     <Loader />
                 </div>
             )}
+            {imageService.status === 'error' && (
+                <p>Unable to load Avatar :/</p>
+            )}
         </>
     );
 };
