@@ -23,9 +23,7 @@ const App: FC<unknown> = () =>  {
     const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
 
     if (userData) {
-        const uglifiedUserData = userData as unknown as { xc: { expires_at: number} };
-
-        if (now < uglifiedUserData.xc?.expires_at ?? now) {
+        if (now < userData.tokenObj.expires_at ?? now) {
             userContext = {
                 isLoggedIn: true,
                 auth: userData.tokenObj,
