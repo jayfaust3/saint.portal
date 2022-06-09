@@ -86,7 +86,7 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                                 }
                             ]
                         }
-                        data={saints.filter((saint) => saint.active)}
+                        data={(saints ?? []).filter((saint) => saint.active)}
                         actions={
                             [
                                 (
