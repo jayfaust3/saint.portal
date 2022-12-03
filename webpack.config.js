@@ -43,12 +43,16 @@ module.exports = {
         historyApiFallback: true,
         open: true,
         proxy: {
-          "/api/saints": {
-            target: "http://localhost:3009",
+          '/api/saints': {
+            target: 'http://localhost:3009',
             changeOrigin: true
           },
-          "/api/files": {
-            target: "http://localhost:3001",
+          '/api/files': {
+            target: 'http://localhost:3001',
+            changeOrigin: true
+          },
+          '/api/users': {
+            target: 'https://localhost:7076',
             changeOrigin: true
           }
         }
