@@ -5,24 +5,30 @@ export abstract class BaseHTTPService {
 
     protected constructor(auth: UserAuth) {
         this._headers = new Headers();
+
         this._headers.append('Accept', 'application/json');
         this._headers.append('Access-Control-Allow-Headers', '*');
         this._headers.append('Access-Control-Allow-Origin', '*');
-        if (auth.apiKey) {
+
+        if (auth.apiKey)
             this._headers.append('Authorization', `ApiKey ${auth.apiKey}`);
-        } else {
+        else
             this._headers.append('Authorization', `Bearer ${auth.id_token}`);
-        }
+
         this._headers.append('Content-Type', 'application/json;charset=UTF-8');
     }
 
     protected async makeRequest<TResult>(httpMethod: string, url: string, payload?: unknown, headers?: Headers): Promise<TResult> {
-        const response: Response  = await fetch(
+        let body: string | undefined;
+
+        if (payload) body = JSON.stringify(payload);
+        
+        const response: Response = await fetch(
             url, 
             { 
                 method: httpMethod, 
                 headers: headers ?? this._headers,
-                body: payload ? JSON.stringify(payload) : undefined
+                body: body
             }
         );
 

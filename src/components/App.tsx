@@ -7,6 +7,8 @@ import AppRouter from './AppRouter';
 import Header from './common/Header';
 
 const App: FC<unknown> = () =>  {
+    const cacheService = new SessionStorageService();
+
     const now = new Date().getTime();
 
     let userContext: UserContext = {
@@ -18,16 +20,18 @@ const App: FC<unknown> = () =>  {
         }
     };
 
-    const cacheService = new SessionStorageService();
+    const loginResponse: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
 
-    const userData: GoogleLoginResponse | null = cacheService.getItem(SessionStorageKey.USER_DATA, false);
+    if (loginResponse) {
+        const token = loginResponse.tokenObj;
 
-    if (userData) {
-        if (now < userData.tokenObj.expires_at ?? now) {
+        if (now < token.expires_at ?? now) {
+            const userData = loginResponse.profileObj;
+
             userContext = {
                 isLoggedIn: true,
-                auth: userData.tokenObj,
-                userData: userData.profileObj
+                auth: token,
+                userData: userData
             };
         } else {
             cacheService.removeItem(SessionStorageKey.USER_DATA);

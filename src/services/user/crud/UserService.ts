@@ -14,7 +14,8 @@ export class UserService extends BaseHTTPService {
     public async getAll(pageToken: PageToken): Promise<APIResponse<Array<User>>> {
         const tokenJSON = JSON.stringify(pageToken);
         const encodedToken = Buffer.from(tokenJSON).toString('base64');
-        return await this.makeRequest<APIResponse<Array<User>>>('GET', `${this._userAPIBaseUrl}/${encodedToken}`);
+        const endpoint = `${this._userAPIBaseUrl}?pageToken=${encodedToken}`;
+        return await this.makeRequest<APIResponse<Array<User>>>('GET', endpoint);
     }
 
     public async get(id: string): Promise<APIResponse<User>> {

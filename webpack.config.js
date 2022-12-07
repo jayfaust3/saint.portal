@@ -52,7 +52,7 @@ module.exports = {
             changeOrigin: true
           },
           '/api/users': {
-            target: 'https://localhost:7076',
+            target: 'http://localhost:5190',
             changeOrigin: true
           }
         }
