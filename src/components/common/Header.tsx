@@ -17,11 +17,10 @@ const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.ap
 
 const cacheService = new SessionStorageService();
 
-const onLoginSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    setTimeout(()=>{}, 10000);
+const redirectToIndex = () => window.location.href = '/';
+
+const onLoginSuccess = async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.error(`\nLOGIN SUCCESSFUL, FETCHING USER\n`);
-    // cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
-    // window.location.href = '/';
 
     response = response as GoogleLoginResponse;
 
@@ -33,19 +32,13 @@ const onLoginSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffli
         term: response.profileObj.email
     };
 
-    userService.getAll(pageToken)
-        .then((userResponse: APIResponse<Array<User>>) => {
-            console.error(`\nUSER RESPONSE: ${JSON.stringify(userResponse, null, 4)}\n`);
-            cacheService.setItem(SessionStorageKey.USER_DATA, response);
-            window.location.href = '/';
-        })
-        .catch(() => {
-            console.error(`\nFAILURE RETREIVING USERS\n`);
-            cacheService.setItem(SessionStorageKey.USER_DATA, response);
-            window.location.href = '/';
-        });
+    const userResponse: APIResponse<Array<User>> = await userService.getAll(pageToken);
 
-    setTimeout(()=>{}, 10000);
+    console.error(`\nUSER RESPONSE: ${JSON.stringify(userResponse, null, 4)}\n`);
+
+    cacheService.setItem(SessionStorageKey.USER_DATA, response);
+
+    redirectToIndex();
 };
 
 const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>
@@ -80,17 +73,18 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
             <GoogleLogin
               clientId={googleClientId}
               buttonText='Login'
-              onSuccess={onLoginSuccess}
+              onSuccess={(response) => onLoginSuccess(response).then(() => setTimeout(() => {}, 5000))}
               onFailure={onLoginFailure}
             />
             :
             <GoogleLogout
               clientId={googleClientId}
               buttonText='Logout'
-              onLogoutSuccess={() => {
-                  cacheService.removeItem(SessionStorageKey.USER_DATA);
-                  window.location.href = '/';
-                }
+              onLogoutSuccess={
+                  () => {
+                      cacheService.removeItem(SessionStorageKey.USER_DATA);
+                      redirectToIndex();
+                  }
               }
               onFailure={() => console.error('UNABLE TO LOGOUT!!!')}
             />
