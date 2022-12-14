@@ -19,9 +19,7 @@ const cacheService = new SessionStorageService();
 
 const redirectToIndex = () => window.location.href = '/';
 
-const onLoginSuccess = async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    console.error(`\nLOGIN SUCCESSFUL, FETCHING USER\n`);
-
+const onLoginSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     response = response as GoogleLoginResponse;
 
     const userService = new UserService(response.tokenObj);
@@ -32,18 +30,26 @@ const onLoginSuccess = async (response: GoogleLoginResponse | GoogleLoginRespons
         term: response.profileObj.email
     };
 
-    const userResponse: APIResponse<Array<User>> = await userService.getAll(pageToken);
+    userService.getAll(pageToken)
+    .then((userResponse: APIResponse<Array<User>>) => {
+      console.error(`\n:userResponse\n${JSON.stringify(userResponse, null, 4)}\n`);
 
-    console.error(`\nUSER RESPONSE: ${JSON.stringify(userResponse, null, 4)}\n`);
+      
+    });
 
     cacheService.setItem(SessionStorageKey.USER_DATA, response);
-
+  
     redirectToIndex();
 };
 
-const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>
+const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     console.error('UNABLE TO LOGIN!!!', JSON.stringify(response, null, 4));
 
+    cacheService.removeItem(SessionStorageKey.USER_DATA);
+
+    redirectToIndex();
+}
+  
 const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
 
@@ -73,7 +79,7 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
             <GoogleLogin
               clientId={googleClientId}
               buttonText='Login'
-              onSuccess={(response) => onLoginSuccess(response).then(() => setTimeout(() => {}, 5000))}
+              onSuccess={(response) => onLoginSuccess(response)}
               onFailure={onLoginFailure}
             />
             :
