@@ -19,7 +19,7 @@ const cacheService = new SessionStorageService();
 
 const redirectToIndex = () => window.location.href = '/';
 
-const onLoginSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+const onLoginSuccess = async (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
     response = response as GoogleLoginResponse;
 
     const userService = new UserService(response.tokenObj);
@@ -30,26 +30,26 @@ const onLoginSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffli
         term: response.profileObj.email
     };
 
-    userService.getAll(pageToken)
-    .then((userResponse: APIResponse<Array<User>>) => {
-      console.error(`\n:userResponse\n${JSON.stringify(userResponse, null, 4)}\n`);
+    const userResponse: APIResponse<Array<User>> = await userService.getAll(pageToken);
 
-      
-    });
+    if (!userResponse.data.length) {
+        const { givenName, familyName, email } = response.profileObj;
+
+        await userService.post({
+          firstName: givenName,
+          lastName: familyName,
+          emailAddress: email
+        });
+    }
 
     cacheService.setItem(SessionStorageKey.USER_DATA, response);
-  
+
     redirectToIndex();
 };
 
-const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>
     console.error('UNABLE TO LOGIN!!!', JSON.stringify(response, null, 4));
 
-    cacheService.removeItem(SessionStorageKey.USER_DATA);
-
-    redirectToIndex();
-}
-  
 const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
 
@@ -79,7 +79,7 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
             <GoogleLogin
               clientId={googleClientId}
               buttonText='Login'
-              onSuccess={(response) => onLoginSuccess(response)}
+              onSuccess={(response) => onLoginSuccess(response).then(() => {})}
               onFailure={onLoginFailure}
             />
             :
