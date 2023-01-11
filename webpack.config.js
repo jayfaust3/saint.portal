@@ -44,16 +44,19 @@ module.exports = {
         open: true,
         proxy: {
           '/api/saints': {
-            target: 'http://localhost:3009',
-            changeOrigin: true
+            target: 'http://0.0.0.0:3009',
+            changeOrigin: true,
+            secure: false
           },
           '/api/files': {
-            target: 'http://localhost:3001',
-            changeOrigin: true
+            target: 'http://0.0.0.0:3001',
+            changeOrigin: true,
+            secure: false
           },
           '/api/users': {
-            target: 'http://localhost:5190',
-            changeOrigin: true
+            target: 'http://0.0.0.0:5190',
+            changeOrigin: true,
+            secure: false
           }
         }
       },
