@@ -1,26 +1,26 @@
-const path = require("path");
+const path = require('path');
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.tsx',
     output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "bundle.js"
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js'
     },
     resolve: {
-        extensions: [".js", ".json", ".ts", ".tsx"]
+        extensions: ['.js', '.json', '.ts', '.tsx']
     },
     module: {
         rules: [
           {
             test: /\.(ts|tsx)$/,
-            loader: "ts-loader"
+            loader: 'ts-loader'
           },
           {
-            enforce: "pre",
+            enforce: 'pre',
             test: /\.js$/,
-            loader: "source-map-loader"
+            loader: 'source-map-loader'
           },
           {
             test: /\.css$/,
@@ -44,17 +44,17 @@ module.exports = {
         open: true,
         proxy: {
           '/api/saints': {
-            target: 'http://0.0.0.0:3009',
+            target: 'http://localhost:3009',
             changeOrigin: true,
             secure: false
           },
           '/api/files': {
-            target: 'http://0.0.0.0:3001',
+            target: 'http://localhost:3001',
             changeOrigin: true,
             secure: false
           },
           '/api/users': {
-            target: 'http://0.0.0.0:5190',
+            target: 'http://localhost:5190',
             changeOrigin: true,
             secure: false
           }
@@ -68,7 +68,7 @@ module.exports = {
           process: 'process/browser',
         }),
         new HtmlWebpackPlugin({
-          template: path.resolve(__dirname, "public", "index.html"),
+          template: path.resolve(__dirname, 'public', 'index.html'),
         })
       ]
 }
