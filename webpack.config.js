@@ -54,7 +54,7 @@ module.exports = {
             secure: false
           },
           '/api/users': {
-            target: 'http://localhost:5190',
+            target: 'https://localhost:7076',
             changeOrigin: true,
             secure: false
           }
