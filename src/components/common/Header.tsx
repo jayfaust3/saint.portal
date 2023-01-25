@@ -12,8 +12,9 @@ import { PageToken } from '../../models/api/PageToken';
 import { User } from '../../models/user/User';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 import { UserService } from '../../services/user/crud/UserService';
+import { getEnvVar } from '../../utilities/environmentUtilities';
 
-const googleClientId: string = '593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com';
+const googleClientId: string = getEnvVar('GOOGLE_CLIENT_ID');
 
 const cacheService = new SessionStorageService();
 

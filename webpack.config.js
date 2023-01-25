@@ -1,6 +1,17 @@
 const path = require('path');
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+require('dotenv').config();
+
+const {
+  HOST_SERVER,
+  HOST_PORT,
+  BACKEND_API_KEY,
+  GOOGLE_CLIENT_ID,
+  FILE_API_ENDPOINT,
+  SAINT_API_ENDPOINT,
+  USER_API_ENDPOINT
+} = process.env
 
 module.exports = {
     entry: './src/index.tsx',
@@ -38,23 +49,23 @@ module.exports = {
         ]
       },
       devServer: {
-        host: 'localhost',
-        port: 4444,
+        host: HOST_SERVER,
+        port: HOST_PORT,
         historyApiFallback: true,
         open: true,
         proxy: {
-          '/api/saints': {
-            target: 'http://localhost:3009',
+          '/api/files': {
+            target: FILE_API_ENDPOINT,
             changeOrigin: true,
             secure: false
           },
-          '/api/files': {
-            target: 'http://localhost:3001',
+          '/api/saints': {
+            target: SAINT_API_ENDPOINT,
             changeOrigin: true,
             secure: false
           },
           '/api/users': {
-            target: 'https://localhost:7076',
+            target: USER_API_ENDPOINT,
             changeOrigin: true,
             secure: false
           }
@@ -69,6 +80,13 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
           template: path.resolve(__dirname, 'public', 'index.html'),
+        }),
+        new webpack.ProgressPlugin(),
+        new webpack.DefinePlugin({
+           'process.env': {
+              BACKEND_API_KEY: JSON.stringify(BACKEND_API_KEY),
+              GOOGLE_CLIENT_ID: JSON.stringify(GOOGLE_CLIENT_ID)
+            }
         })
       ]
 }

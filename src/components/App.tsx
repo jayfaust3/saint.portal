@@ -5,6 +5,7 @@ import { SessionStorageKey, SessionStorageService } from '../services/browser/Se
 import { UserContext } from '../models/security/UserContext';
 import AppRouter from './AppRouter';
 import Header from './common/Header';
+import { getEnvVar } from '../utilities/environmentUtilities';
 
 const App: FC<unknown> = () =>  {
     const cacheService = new SessionStorageService();
@@ -14,7 +15,7 @@ const App: FC<unknown> = () =>  {
     let userContext: UserContext = {
         isLoggedIn: false,
         auth: {
-            apiKey: 'fd2b3237b2a94b511961f1c88859cd6affeae19a42d085d2da60198e83a5a62f',
+            apiKey: getEnvVar('BACKEND_API_KEY'),
             expires_in: 3599,
             expires_at: now + (60 * 60 * 1000)
         }
