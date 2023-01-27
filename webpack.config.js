@@ -53,6 +53,12 @@ module.exports = {
         port: HOST_PORT,
         historyApiFallback: true,
         open: true,
+        compress: true,
+        https: true,
+        client: {
+          overlay: false,
+          reconnect: 2
+        },
         proxy: {
           '/api/files': {
             target: FILE_API_ENDPOINT,
