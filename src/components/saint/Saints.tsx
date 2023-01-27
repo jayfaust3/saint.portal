@@ -32,7 +32,7 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                     <div className='container'>
                         <h1>Who were the Saints?</h1>
                         <p className='slogan'>
-                            Learn where the Saints were born, where they're from, and their fates.
+                            Learn when the Saints were born, where they're from, and their fates.
                         </p>
                     </div>
                 </header>
