@@ -7,12 +7,9 @@ import IconButton from '@mui/material/IconButton';
 // import MenuIcon from '@mui/icons-material/Menu';
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
 import { UserContext } from '../../models/security/UserContext';
-import { APIResponse } from '../../models/api/APIResponse';
-import { PageToken } from '../../models/api/PageToken';
-import { User } from '../../models/user/User';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
-import { UserService } from '../../services/user/crud/UserService';
 import { getEnvVar } from '../../utilities/environmentUtilities';
+import { AuthService } from '../../services/auth/crud/AuthService';
 
 const googleClientId: string = getEnvVar('GOOGLE_CLIENT_ID');
 
@@ -21,32 +18,22 @@ const cacheService = new SessionStorageService();
 const redirectToIndex = () => window.location.href = '/';
 
 const onLoginSuccess = (loginResponse: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-  loginResponse = loginResponse as GoogleLoginResponse;
+    loginResponse = loginResponse as GoogleLoginResponse;
 
-    cacheService.setItem(SessionStorageKey.USER_DATA, loginResponse);
+    const userService = new AuthService(loginResponse.tokenObj);
 
-    const userService = new UserService(loginResponse.tokenObj);
+    userService.getToken().then(({ data }) => {
+      const { token } = data;
 
-    const pageToken: PageToken = {
-        cursor: 0,
-        limit: 1,
-        term: loginResponse.profileObj.email
-    };
+      loginResponse = loginResponse as GoogleLoginResponse;
 
-    userService.getAll(pageToken)
-        .then((userResponse: APIResponse<Array<User>>) => {
-            if (!userResponse.data.length) {
-                const { givenName, familyName, email } = (loginResponse as GoogleLoginResponse).profileObj;
+      loginResponse.tokenId = token;
+      loginResponse.tokenObj = { ...loginResponse.tokenObj, id_token: token };
 
-                userService.post({
-                  firstName: givenName,
-                  lastName: familyName,
-                  emailAddress: email
-                }).then();
-            }
+      cacheService.setItem(SessionStorageKey.USER_DATA, loginResponse);
 
-            redirectToIndex();
-        });
+      redirectToIndex();
+    })
 };
 
 const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>

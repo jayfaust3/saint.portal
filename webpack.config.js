@@ -8,6 +8,7 @@ const {
   HOST_PORT,
   BACKEND_API_KEY,
   GOOGLE_CLIENT_ID,
+  AUTH_API_ENDPOINT,
   FILE_API_ENDPOINT,
   SAINT_API_ENDPOINT,
   USER_API_ENDPOINT
@@ -60,6 +61,16 @@ module.exports = {
           reconnect: 2
         },
         proxy: {
+          '/api/auth': {
+            target: AUTH_API_ENDPOINT,
+            changeOrigin: true,
+            secure: false
+          },
+          '/api/auth/*': {
+            target: AUTH_API_ENDPOINT,
+            changeOrigin: true,
+            secure: false
+          },
           '/api/files': {
             target: FILE_API_ENDPOINT,
             changeOrigin: true,
