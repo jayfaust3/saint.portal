@@ -10,34 +10,33 @@ import { UserContext } from '../../models/security/UserContext';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
 import { getEnvVar } from '../../utilities/environmentUtilities';
 import { AuthService } from '../../services/auth/crud/AuthService';
+import { redirectToIndex } from '../../utilities/navigationUtilities';
 
 const googleClientId: string = getEnvVar('GOOGLE_CLIENT_ID');
 
 const cacheService = new SessionStorageService();
 
-const redirectToIndex = () => window.location.href = '/';
-
 const onLoginSuccess = (loginResponse: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    loginResponse = loginResponse as GoogleLoginResponse;
+    const successResponse = loginResponse as GoogleLoginResponse;
 
-    const userService = new AuthService(loginResponse.tokenObj);
+    const authService = new AuthService(successResponse.tokenObj);
 
-    userService.getToken().then(({ data }) => {
+    authService.getToken().then(({ data }) => {
       const { token } = data;
 
-      loginResponse = loginResponse as GoogleLoginResponse;
-
-      loginResponse.tokenId = token;
-      loginResponse.tokenObj = { ...loginResponse.tokenObj, id_token: token };
-
-      cacheService.setItem(SessionStorageKey.USER_DATA, loginResponse);
+      if (token) {
+        successResponse.tokenId = token;
+        successResponse.tokenObj = { ...successResponse.tokenObj, id_token: token };
+      }
+      
+      cacheService.setItem(SessionStorageKey.USER_DATA, successResponse);
 
       redirectToIndex();
     })
 };
 
 const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>
-    console.error('UNABLE TO LOGIN!!!', JSON.stringify(response, null, 4));
+    console.error('Login Failure', JSON.stringify(response, null, 4));
 
 const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
@@ -81,7 +80,7 @@ const Header: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                       redirectToIndex();
                   }
               }
-              onFailure={() => console.error('UNABLE TO LOGOUT!!!')}
+              onFailure={() => console.error('Logout Failure')}
             />
             }
           </Toolbar>

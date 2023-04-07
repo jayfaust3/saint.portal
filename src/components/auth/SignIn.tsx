@@ -1,54 +1,44 @@
 import React, { FC } from 'react';
-import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
-import { useNavigate } from 'react-router-dom';
-import { APIResponse } from '../../models/api/APIResponse';
-import { PageToken } from '../../models/api/PageToken';
-import { User } from '../../models/user/User';
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout } from 'react-google-login';
 import { SessionStorageKey, SessionStorageService } from '../../services/browser/SessionStorageService';
-import { UserService } from '../../services/user/crud/UserService';
+import { getEnvVar } from '../../utilities/environmentUtilities';
+import { AuthService } from '../../services/auth/crud/AuthService';
+import { redirectToIndex } from '../../utilities/navigationUtilities';
+
+const googleClientId: string = getEnvVar('GOOGLE_CLIENT_ID');
+
+const cacheService = new SessionStorageService();
+
+const onLoginSuccess = (loginResponse: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    const successResponse = loginResponse as GoogleLoginResponse;
+
+    const authService = new AuthService(successResponse.tokenObj);
+
+    authService.getToken().then(({ data }) => {
+      const { token } = data;
+
+      if (token) {
+        successResponse.tokenId = token;
+        successResponse.tokenObj = { ...successResponse.tokenObj, id_token: token };
+      }
+
+      cacheService.setItem(SessionStorageKey.USER_DATA, successResponse);
+
+      redirectToIndex();
+    })
+};
+
+const onLoginFailure = (response: GoogleLoginResponse | GoogleLoginResponseOffline) =>
+    console.error('Login Failure', JSON.stringify(response, null, 4));
 
 const SignIn: FC<{}> = () => {
-    console.error(`\nLOGGING IN\n`);
     return (
         <div >
             <GoogleLogin
-                clientId='593080116652-b3nl1jjpf7ke5p294p0atco72eu8dflk.apps.googleusercontent.com'
-                buttonText='Login'
-                onSuccess={(response) => {
-                        response = response as GoogleLoginResponse;
-
-                        const navigate = useNavigate();
-
-                        const cacheService = new SessionStorageService();
-
-                        const userService = new UserService(response.tokenObj);
-
-                        const pageToken: PageToken = {
-                            cursor: 0,
-                            limit: 1,
-                            term: response.profileObj.email
-                        };
-
-                        console.error(`\nLOGIN SUCCESSFUL, FETCHING USER\n`);
-                        userService.getAll(pageToken)
-                            .then((userResponse: APIResponse<Array<User>>) => {
-                                console.error(`\nUSER RESPONSE: ${JSON.stringify(userResponse, null, 4)}\n`);
-
-                                cacheService.setItem(SessionStorageKey.USER_DATA, response);
-                                navigate('/saints');
-                            })
-                            .catch(() => {
-                                console.error(`\nFAILURE RETREIVING USERS\n`);
-                                cacheService.setItem(SessionStorageKey.USER_DATA, response);
-                                navigate('/saints');
-                            });
-
-                        // cacheService.setItem(SessionStorageKey.USER_DATA, (response as GoogleLoginResponse));
-
-                        // navigate('/saints');
-                    }
-                }
-                onFailure={(response) => console.error('Unable to login\n', JSON.stringify(response, null, 4))}
+              clientId={googleClientId}
+              buttonText='Login'
+              onSuccess={(response) => onLoginSuccess(response)}
+              onFailure={onLoginFailure}
             />
         </div>
     );
