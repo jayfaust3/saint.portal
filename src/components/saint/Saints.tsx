@@ -10,13 +10,13 @@ import { enumValueToFriendlyName } from '../../utilities/enumUtilities';
 import { Saint } from '../../models/saint/Saint';
 import { UserContext } from '../../models/security/UserContext';
 import useSaintsService from '../../services/saint/view/useGetSaintsService';
-import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
+import useSaintCRUDService from '../../services/saint/view/useSaintCRUDService';
 
 const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
     const isLoggedIn: boolean = props.userContext.isLoggedIn;
     const navigate = useNavigate();
     const getSaintsService = useSaintsService(props.userContext.auth);
-    const { saveSaint } = useSaveSaintService(props.userContext.auth);
+    const { deleteSaint } = useSaintCRUDService(props.userContext.auth);
     const [saints, setSaints] = useState<Array<Saint>>([]);
     useEffect(
         () => {
@@ -86,7 +86,7 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                                 }
                             ]
                         }
-                        data={(saints ?? []).filter((saint) => saint.active)}
+                        data={saints ?? []}
                         actions={
                             [
                                 (
@@ -109,9 +109,7 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                                     onClick: async (event, data) => {
                                         const saint = data as Saint;
 
-                                        saint.active = false;
-
-                                        await saveSaint(saint);
+                                        await deleteSaint(saint.id!);
                                     }
                                 }
                             ]

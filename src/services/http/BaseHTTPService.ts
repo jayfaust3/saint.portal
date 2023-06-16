@@ -1,6 +1,6 @@
 import { UserAuth } from '../../models/security/UserAuth';
 
-type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH'
+type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 export abstract class BaseHTTPService {
     protected readonly _headers: Record<string, string> = {

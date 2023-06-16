@@ -6,17 +6,22 @@ import { Service } from '../../Service';
 import { SaintService } from '../crud/SaintService';
 import { FileService } from '../../file/crud/FileService';
 
-const useSaveSaintService = (auth: UserAuth) => {
-    const [saveSaintService, setService] = useState<Service<{}>>({
+const useSaintCRUDService = (auth: UserAuth) => {
+    const [saintCRUDService, setService] = useState<Service<{}>>({
         status: 'init'
     });
 
     const validateSaint = (saint: Saint) => {
-        if (!saint.name || !saint.region || !saint.yearOfDeath || !saint.region) {
+        if (
+            !saint.name ||
+            saint.yearOfBirth !== undefined ||
+            saint.yearOfDeath !== undefined ||
+            !saint.region
+        ) {
             throw Error('Saint missing one or more required properties.');
         }
 
-        if (saint.yearOfBirth! > saint.yearOfDeath) {
+        if (saint.yearOfBirth! > saint.yearOfDeath!) {
             throw Error(`Saint's Year Of Birth must not be after Year Of Death.`);
         }
     };
@@ -57,10 +62,25 @@ const useSaveSaintService = (auth: UserAuth) => {
         }
     };
 
+    const deleteSaint = async(saintId: string) => {
+        setService({ status: 'loading' });
+
+        const saintService = new SaintService(auth);
+
+        try {
+            await saintService.delete(saintId);
+
+            setService({ status: 'loaded', payload: {} });
+        } catch (error) {
+            setService({ status: 'error', error: error as Error });
+        }
+    };
+
     return {
-        saveSaintService,
-        saveSaint
+        saintCRUDService,
+        saveSaint,
+        deleteSaint
     };
 };
 
-export default useSaveSaintService;
+export default useSaintCRUDService;

@@ -11,7 +11,7 @@ import { Region } from '../../models/saint/Region';
 import { DropdownModel } from '../../models/component/DropdownModel';
 import { UserContext } from '../../models/security/UserContext';
 import useGetSaintService from '../../services/saint/view/useGetSaintService';
-import useSaveSaintService from '../../services/saint/view/useSaveSaintService';
+import useSaveSaintService from '../../services/saint/view/useSaintCRUDService';
 import { enumToDropDownModelArray, enumValueToFriendlyName } from '../../utilities/enumUtilities';
 
 const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ userContext: UserContext }>) => {
@@ -20,10 +20,10 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
     const { saintId } = useParams();
     const create: boolean = !saintId;
     const [formValid, setFormValid] = useState<boolean>(!create);
-    const [saint, setSaint] = useState<Saint>({ id: saintId, active: true, hasAvatar: false });
+    const [saint, setSaint] = useState<Saint>({ id: saintId, hasAvatar: false });
     const [files, setFiles] = useState<Array<FileValidated>>([]);
     const getSaintService: Service<{}> = useGetSaintService(props.userContext.auth, saint, setSaint, setFiles, saintId);
-    const { saveSaintService, saveSaint } = useSaveSaintService(props.userContext.auth);
+    const { saintCRUDService, saveSaint } = useSaveSaintService(props.userContext.auth);
     const regions: Array<DropdownModel> = enumToDropDownModelArray(Region);
     useEffect(
         () => setFormValid(
@@ -213,15 +213,15 @@ const Saint: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ user
             </form>)}
 
             {(getSaintService.status === 'loading' || 
-            saveSaintService.status === 'loading') && (
+            saintCRUDService.status === 'loading') && (
                 <div className='loader-container'>
                     <Loader />
                 </div>
             )}
-            {saveSaintService.status === 'loaded' && (
+            {saintCRUDService.status === 'loaded' && (
                 <div>Your Saint has been submitted.</div>
             )}
-            {saveSaintService.status === 'error' && (
+            {saintCRUDService.status === 'error' && (
                 <div>
                     Unable to submit Saint.
                 </div>

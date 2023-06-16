@@ -25,4 +25,8 @@ export class SaintService extends BaseHTTPService {
     public async put(id: string, payload: Saint): Promise<APIResponse<Saint>> {
         return await this.makeRequest<APIResponse<Saint>>('PUT', `${this._saintAPIBaseUrl}/${id}`, payload);
     }
+
+    public async delete(id: string): Promise<APIResponse<never>> {
+        return await this.makeRequest<APIResponse<never>>('DELETE', `${this._saintAPIBaseUrl}/${id}`);
+    }
 }
