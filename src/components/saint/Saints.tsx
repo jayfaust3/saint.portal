@@ -109,7 +109,13 @@ const Saints: FC<{ userContext: UserContext }> = (props: PropsWithChildren<{ use
                                     onClick: async (event, data) => {
                                         const saint = data as Saint;
 
-                                        await deleteSaint(saint.id!);
+                                        const idOfSaintToDelete = saint.id!;
+
+                                        await deleteSaint(idOfSaintToDelete);
+
+                                        setSaints(
+                                            saints.filter(saint => saint.id !== idOfSaintToDelete)
+                                        );
                                     }
                                 }
                             ]

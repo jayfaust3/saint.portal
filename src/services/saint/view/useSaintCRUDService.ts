@@ -14,8 +14,8 @@ const useSaintCRUDService = (auth: UserAuth) => {
     const validateSaint = (saint: Saint) => {
         if (
             !saint.name ||
-            saint.yearOfBirth !== undefined ||
-            saint.yearOfDeath !== undefined ||
+            saint.yearOfBirth === undefined ||
+            saint.yearOfDeath === undefined ||
             !saint.region
         ) {
             throw Error('Saint missing one or more required properties.');
